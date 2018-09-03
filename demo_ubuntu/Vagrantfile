@@ -16,21 +16,39 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   #config.vm.box = "ubuntu/xenial64"
 	#(1..4).each do |i|
-	(2..4).each do |i|
+	#(2..2).each do |i|
+	$_NODE_FIRST = 2
+	$_NODE_LAST = 6
+	($_NODE_FIRST..$_NODE_LAST).each do |i|
 		config.vm.define "node-#{i}" do |node|
 			node.vm.box = "ubuntu/xenial64"
-			node.vm.network "private_network", ip: "192.168.100.#{i}"
-			node.vm.network "private_network", ip: "192.168.101.#{i}"
+			$_IP1 = "192.168.100.#{i}"
+			$_IP2 = "192.168.101.#{i}"
+			node.vm.network "private_network", ip: $_IP1
+			node.vm.network "private_network", ip: $_IP2
 			$_FW_PORT_HTTP = 8000 + i
-			node.vm.network "forwarded_port", guest: 80, host: $_FW_PORT_HTTP, id: "http"
 			$_FW_PORT_SSH = 2200 + i
+			node.vm.network "forwarded_port", guest: 80, host: $_FW_PORT_HTTP, id: "http"
 			node.vm.network "forwarded_port", guest: 22, host: $_FW_PORT_SSH, id: "ssh"
-
+			#set host name
 			node.vm.provision "shell", inline: <<-SHELL
 				echo "node-#{i}" | sudo tee /etc/hostname
 			SHELL
 			node.vm.provision "shell", path: "bootstrap_init.sh"
 			node.vm.provision "shell", path: "bootstrap_sshd.sh"
+			node.vm.provision "shell", path: "bootstrap_python.sh"
+			#building hosts template as /vagrant/etc_hosts
+			if i == $_NODE_FIRST
+				node.vm.provision "shell", inline: <<-"SHELL"
+					if [ -f /vagrant/etc_hosts ]; then
+						mv /vagrant/etc_hosts /vagrant/etc_hosts.backup
+					fi
+				SHELL
+			end
+			node.vm.provision "shell", inline: <<-"SHELL"
+				echo "#{$_IP1} node-#{i}" | tee -a /vagrant/etc_hosts
+				echo "#{$_IP2} node-#{i}" | tee -a /vagrant/etc_hosts
+			SHELL
 		end
 	end
 
