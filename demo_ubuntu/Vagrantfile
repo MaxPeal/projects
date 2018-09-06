@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 	#(1..4).each do |i|
 	#(2..2).each do |i|
 	$_NODE_FIRST = 2
-	$_NODE_LAST = 6
+	$_NODE_LAST = 6 
 	($_NODE_FIRST..$_NODE_LAST).each do |i|
 		config.vm.define "node-#{i}" do |node|
 			node.vm.box = "ubuntu/xenial64"
