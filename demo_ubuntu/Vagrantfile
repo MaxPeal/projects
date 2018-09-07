@@ -43,6 +43,9 @@ Vagrant.configure("2") do |config|
 					if [ -f /vagrant/etc_hosts ]; then
 						mv /vagrant/etc_hosts /vagrant/etc_hosts.backup
 					fi
+					# SSH Keygen
+					ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+					#ssh-keygen -p -N "" -f ~/.ssh/id_rsa
 				SHELL
 			end
 			node.vm.provision "shell", inline: <<-"SHELL"
