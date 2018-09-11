@@ -18,7 +18,7 @@ Vagrant.configure("2") do |config|
 	#(1..4).each do |i|
 	#(2..2).each do |i|
 	_NODE_FIRST = 2
-	_NODE_LAST = 3
+	_NODE_LAST = 6
 	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
 	(_NODE_FIRST.._NODE_LAST).each do |i|
 		config.vm.define "node-#{i}" do |node|
@@ -62,10 +62,11 @@ Vagrant.configure("2") do |config|
 			end
 			node.vm.provision "shell", inline: <<-"SHELL"
 				echo "#{_IP1} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
-				echo "#{_IP1} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+				echo "#{_IP2} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+				#echo "#{_IP1} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
 				#echo "#{_IP2} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
-				#echo "#{_IP2} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
-				echo "sshpass -f ./password.txt ssh-copy-id vagrant@node-#{i}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
+				echo 'sshpass -p "vagrant" ssh-copy-id -o "StrictHostKeyChecking no" vagrant@node-#{i}' >> /vagrant/toolbox/run_ssh_copy_ids.sh
+				#echo "sshpass -f ./password.txt ssh-copy-id vagrant@node-#{i}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
 			SHELL
 		end
 	end
