@@ -1,0 +1,177 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+ENV["LC_ALL"] = "en_US.UTF-8"
+
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  #config.vm.box = "ubuntu/xenial64"
+	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
+	_node = []
+	_node[2] = { "index" => 2, "hostname" => "control", 	"ipv4_addr_1" => "192.168.100.2" }
+	_node[3] = { "index" => 3, "hostname" => "lb01", 	"ipv4_addr_1" => "192.168.100.3" }
+	_node[4] = { "index" => 4, "hostname" => "app01", 	"ipv4_addr_1" => "192.168.100.4" }
+	_node[5] = { "index" => 5, "hostname" => "app02", 	"ipv4_addr_1" => "192.168.100.5" }
+	_node[6] = { "index" => 6, "hostname" => "db01", 	"ipv4_addr_1" => "192.168.100.6" }
+	_node_index_first = _node[2]["index"]
+	_node_index_last = _node[6]["index"]
+
+
+	(_node_index_first.._node_index_last).each do |i|
+		config.vm.define "#{_node[i]['hostname']}" do |node|
+			node.vm.box = "ubuntu/xenial64"
+			node.vm.hostname = "#{_node[i]['hostname']}"
+			node.vm.network "private_network", ip: "#{_node[i]['ipv4_addr_1']}"
+			_FW_PORT_HTTP = 8090 + i
+			_FW_PORT_SSH = 2290 + i
+			node.vm.network "forwarded_port", guest: 80, host: _FW_PORT_HTTP, id: "http"
+			node.vm.network "forwarded_port", guest: 22, host: _FW_PORT_SSH, id: "ssh"
+			node.vm.provision "shell", path: "bootstrap_init.sh"
+			node.vm.provision "shell", path: "bootstrap_sshd.sh"
+			node.vm.provision "shell", path: "bootstrap_python.sh"
+			node.vm.provision "shell", path: "bootstrap_ssh_keygen.sh"
+			if _node[i]["index"] == _node_index_first
+				node.vm.provision "shell", inline: <<-"SHELL"
+					echo "INFO: the first loop"
+					if [ -f "#{_FP_HOSTS_TEMP}" ]; then
+						mv "#{_FP_HOSTS_TEMP}" "#{_FP_HOSTS_TEMP}".backup
+					fi
+					echo "#!/bin/bash" > /vagrant/toolbox/run_ssh_copy_ids.sh
+					chmod +x /vagrant/toolbox/run_ssh_copy_ids.sh
+					# create script for updating /etc/hosts
+					cat <<-SCRIPT > /vagrant/toolbox/run_hosts_update.sh
+						cat "#{_FP_HOSTS_TEMP}" | sudo tee -a /etc/hosts	
+					SCRIPT
+					chmod +x /vagrant/toolbox/run_hosts_update.sh
+				SHELL
+			end
+			if _node[i]["hostname"] == "control"
+				node.vm.provision "shell", inline: <<-"SHELL"
+					echo "DEBUG: no specific tasks assigined"
+				SHELL
+			end
+			# update node info
+			node.vm.provision "shell", inline: <<-SHELL
+				echo "#{_node[i]['ipv4_addr_1']} #{_node[i]['hostname']}" | tee -a "#{_FP_HOSTS_TEMP}" 
+				echo "sshpass -p 'vagrant' ssh-copy-id -o 'StrictHostKeyChecking no' vagrant@#{_node[i]['hostname']}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
+			SHELL
+		end
+	end
+
+#	_NODE_FIRST = 2
+#	_NODE_LAST = 6
+#	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
+#	(_NODE_FIRST.._NODE_LAST).each do |i|
+#		config.vm.define "node-#{i}" do |node|
+#			node.vm.box = "ubuntu/xenial64"
+#			_IP1 = "192.168.100.#{i}"
+#			_IP2 = "192.168.101.#{i}"
+#			node.vm.network "private_network", ip: _IP1
+#			node.vm.network "private_network", ip: _IP2
+#			_FW_PORT_HTTP = 8000 + i
+#			_FW_PORT_SSH = 2200 + i
+#			node.vm.network "forwarded_port", guest: 80, host: _FW_PORT_HTTP, id: "http"
+#			node.vm.network "forwarded_port", guest: 22, host: _FW_PORT_SSH, id: "ssh"
+#			#set host name
+#			node.vm.provision "shell", inline: <<-SHELL
+#				echo "node-#{i}" | sudo tee /etc/hostname
+#			SHELL
+#			node.vm.provision "shell", path: "bootstrap_init.sh"
+#			node.vm.provision "shell", path: "bootstrap_sshd.sh"
+#			node.vm.provision "shell", path: "bootstrap_python.sh"
+#			#building hosts template as /vagrant/etc_hosts
+#			if i == _NODE_FIRST
+#				node.vm.provision "shell", inline: <<-"SHELL"
+#					if [ -f "#{_FP_HOSTS_TEMP}" ]; then
+#						mv "#{_FP_HOSTS_TEMP}" "#{_FP_HOSTS_TEMP}".backup
+#					fi
+#					# install sshpass
+#					sudo apt-get install -y sshpass > /dev/null 2>&1
+#					# create sshpass password file
+#					echo "vagrant" > ./password.txt
+#					# create ssh key pair (under vagrant account) 
+#					su - vagrant -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa'
+#					echo "#!/bin/bash" > /vagrant/toolbox/run_ssh_copy_ids.sh
+#					chmod +x /vagrant/toolbox/run_ssh_copy_ids.sh
+#					# create script for updating /etc/hosts
+#					cat <<-SCRIPT > /vagrant/toolbox/run_hosts_update.sh
+#						#cat /vagrant/toolbox/etc_hosts | sudo tee -a /etc/hosts	
+#						cat "#{_FP_HOSTS_TEMP}" | sudo tee -a /etc/hosts	
+#					SCRIPT
+#					chmod +x /vagrant/toolbox/run_hosts_update.sh
+#				SHELL
+#			end
+#			node.vm.provision "shell", inline: <<-"SHELL"
+#				echo "#{_IP1} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+#				echo "#{_IP2} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+#				#echo "#{_IP1} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
+#				#echo "#{_IP2} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
+#				echo 'sshpass -p "vagrant" ssh-copy-id -o "StrictHostKeyChecking no" vagrant@node-#{i}' >> /vagrant/toolbox/run_ssh_copy_ids.sh
+#				#echo "sshpass -f ./password.txt ssh-copy-id vagrant@node-#{i}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
+#			SHELL
+#		end
+#	end
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end
