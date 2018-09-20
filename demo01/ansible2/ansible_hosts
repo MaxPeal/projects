@@ -1,0 +1,17 @@
+[gw]
+gw01
+
+[ap]
+ap01
+
+[dnsmasq]
+dmsq01
+
+[node]
+node01
+node02
+node03
+
+
+[controller]
+control ansible_connection=local
