@@ -1,0 +1,72 @@
+---
+# tasks file for nat
+
+# description:
+# edit /etc/sysctl.conf and uncomment #net.ipv4.ip_forward=1
+##- name: enable packet forwarding on ipv4 (uncommnet net.ipv4.ip_forward=1)
+#- name: copy (backup) /etc/sysctl.conf as /etc/sysctl.conf.backup
+#  copy:
+#    src: "/etc/sysctl.conf"
+#    dest: "/etc/sysctl.conf.original" 
+#    owner: root
+#    group: root
+#    mode: 0644
+#    backup: yes
+
+- name: Set ip forwarding on in /proc and in the sysctl file (/etc/sysctl.conf) and reload if necessary
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    #value: 0
+    #sysctl_file: /etc/sysctl.conf
+    sysctl_set: yes
+    state: present
+    reload: yes
+  become: yes
+
+# description:
+# configuring NAT with iptables
+#iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+#iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
+#iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT  
+
+- name: configuring NAT masquerading on external port
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: "{{ nat_external_interface }}"
+    jump: MASQUERADE
+  become: yes
+
+- name: configuring NAT inbound forwarding policy
+  iptables:
+    chain: FORWARD
+    in_interface: "{{ nat_external_interface }}"
+    out_interface: "{{ nat_internal_interface }}"
+    ctstate: ESTABLISHED,RELATED
+    jump: ACCEPT
+  become: yes
+
+- name: configuring NAT outbound forwarding poliicy
+  iptables:
+    chain: FORWARD
+    in_interface: "{{ nat_internal_interface }}"
+    out_interface: "{{ nat_external_interface }}"
+    jump: ACCEPT
+  become: yes
+
+- name: prevent the iptables-peristent install dialog
+  debconf: name=iptables-persistent question={{ item }} vtype=boolean value=true
+  with_items:
+  - iptables-persistent/autosave_v4
+  - iptables-persistent/autosave_v6
+  become: yes
+
+- name: install iptables-persistent
+  apt:
+    name: iptables-persistent 
+    state: present
+    update_cache: true
+  become: yes
+
+

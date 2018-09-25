@@ -1,0 +1,7 @@
+---
+# defaults file for nat
+
+# note:
+# below variables should go under vars/main.yml
+#nat_external_interface: enp0s3
+#nat_internal_interface: enp0s8 

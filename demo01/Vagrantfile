@@ -17,11 +17,66 @@ Vagrant.configure("2") do |config|
   #config.vm.box = "ubuntu/xenial64"
 	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
 	_node = []
-	_node[2] = { "index" => 2, "hostname" => "control", 	"ipv4_addr_1" => "192.168.100.2" }
-	_node[3] = { "index" => 3, "hostname" => "lb01", 	"ipv4_addr_1" => "192.168.100.3" }
-	_node[4] = { "index" => 4, "hostname" => "app01", 	"ipv4_addr_1" => "192.168.100.4" }
-	_node[5] = { "index" => 5, "hostname" => "app02", 	"ipv4_addr_1" => "192.168.100.5" }
-	_node[6] = { "index" => 6, "hostname" => "db01", 	"ipv4_addr_1" => "192.168.100.6" }
+	_index = 2
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "control",
+		"group" => "controller",
+		"ipv4_addr_list" => [
+			"192.168.100.#{_index}",
+			"192.168.101.#{_index}",
+			"192.168.102.#{_index}",
+		]
+			
+	}
+	_index = 3
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "nat01",
+		"group" => "gateway",
+		"ipv4_addr_list" => [
+			"192.168.100.#{_index}",
+			"192.168.101.#{_index}",
+			"192.168.102.#{_index}",
+		]
+			
+	}
+	_index = 4
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "dnsmasq01",
+		"group" => "dnsmasq",
+		"ipv4_addr_list" => [
+			"192.168.100.#{_index}",
+			"192.168.101.#{_index}",
+			"192.168.102.#{_index}",
+		]
+			
+	}
+	_index = 5
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "client01",
+		"group" => "client",
+		"ipv4_addr_list" => [
+			"192.168.100.#{_index}",
+			"192.168.101.#{_index}",
+			"192.168.102.#{_index}",
+		]
+			
+	}
+	_index = 6
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "client02",
+		"group" => "client",
+		"ipv4_addr_list" => [
+			"192.168.100.#{_index}",
+			"192.168.101.#{_index}",
+			"192.168.102.#{_index}",
+		]
+			
+	}
 	_node_index_first = _node[2]["index"]
 	_node_index_last = _node[6]["index"]
 
@@ -30,7 +85,18 @@ Vagrant.configure("2") do |config|
 		config.vm.define "#{_node[i]['hostname']}" do |node|
 			node.vm.box = "ubuntu/xenial64"
 			node.vm.hostname = "#{_node[i]['hostname']}"
-			node.vm.network "private_network", ip: "#{_node[i]['ipv4_addr_1']}"
+			_loop_count = 0
+			_node[i]["ipv4_addr_list"].each do |ipv4_addr|
+				# please refer to virtualbox specific network:
+				# https://www.vagrantup.com/docs/virtualbox/networking.html
+				# https://blogs.oracle.com/scoter/networking-in-virtualbox-v2
+				# setting internal network = true (no dhcp)
+				node.vm.network "private_network", ip: "#{ipv4_addr}",
+					virtualbox__intnet: "intnet_#{_loop_count}"
+					#virtualbox__intnet: true
+				_loop_count = _loop_count + 1
+
+			end
 			_FW_PORT_HTTP = 8090 + i
 			_FW_PORT_SSH = 2290 + i
 			node.vm.network "forwarded_port", guest: 80, host: _FW_PORT_HTTP, id: "http"
@@ -39,9 +105,9 @@ Vagrant.configure("2") do |config|
 			node.vm.provision "shell", path: "bootstrap_sshd.sh"
 			node.vm.provision "shell", path: "bootstrap_python.sh"
 			node.vm.provision "shell", path: "bootstrap_ssh_keygen.sh"
-			if _node[i]["index"] == _node_index_first
+			if _node[i]["index"] == _node_index_first 
 				node.vm.provision "shell", inline: <<-"SHELL"
-					echo "INFO: the first loop"
+					echo "INFO: the first loop" 
 					if [ -f "#{_FP_HOSTS_TEMP}" ]; then
 						mv "#{_FP_HOSTS_TEMP}" "#{_FP_HOSTS_TEMP}".backup
 					fi
@@ -61,7 +127,7 @@ Vagrant.configure("2") do |config|
 			end
 			# update node info
 			node.vm.provision "shell", inline: <<-SHELL
-				echo "#{_node[i]['ipv4_addr_1']} #{_node[i]['hostname']}" | tee -a "#{_FP_HOSTS_TEMP}" 
+				echo "#{_node[i]['ipv4_addr_list'][0]} #{_node[i]['hostname']}" | tee -a "#{_FP_HOSTS_TEMP}" 
 				echo "sshpass -p 'vagrant' ssh-copy-id -o 'StrictHostKeyChecking no' vagrant@#{_node[i]['hostname']}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
 			SHELL
 		end

@@ -1,0 +1,63 @@
+---
+# vars file for dhcpd
+dhcpd_interfaces:
+  - enp0s8
+  - enp0s9
+  - enp0s10
+
+# notes:
+# dhcpd_interface_list = ["enp08", "enp09"]
+# dhcpd_interface_list.0 = "enp08"
+# dhcpd_interface_list|join(' ') = "enp08 enp09"
+
+dhcpd_subnets:
+  - name: managment
+    #cidr: 192.168.100.0/24
+    subnet: 192.168.100.0
+    subnet_mask: 255.255.255.0
+    broadcast: 192.168.100.255
+    #router_default: 192.168.100.254
+    router_default: 192.168.100.3
+    range_min: 192.168.100.101
+    range_max: 192.168.100.109
+    domain_name: management
+    dns: 
+      - ns1.management
+      - ns2.management
+    ntp:
+      - 192.168.100.3
+      #- 192.168.100.254
+      #- "{{dhcpd_subnets[loop.index0].router_default}}"
+  - name: internal
+    #cidr: 192.168.101.0/24
+    subnet: 192.168.101.0
+    subnet_mask: 255.255.255.0
+    broadcast: 192.168.101.255
+    router_default: 192.168.101.254
+    range_min: 192.168.101.101
+    range_max: 192.168.101.109
+    domain_name: internal
+    dns: 
+      - ns1.internal
+      - ns2.internal
+    ntp:
+      - 192.168.101.3
+      #- 192.168.101.254
+      #- "{{router_default}}"
+  - name: external
+    #cidr: 192.168.102.0/24
+    subnet: 192.168.102.0
+    subnet_mask: 255.255.255.0
+    broadcast: 192.168.102.255
+    router_default: 192.168.102.254
+    range_min: 192.168.102.101
+    range_max: 192.168.102.109
+    domain_name: external
+    dns: 
+      - ns1.external
+      - ns2.external
+    ntp:
+      - 192.168.102.3
+      #- 192.168.102.254
+      #- "{{router_default}}"
+

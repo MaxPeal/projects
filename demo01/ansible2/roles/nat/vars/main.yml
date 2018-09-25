@@ -1,0 +1,5 @@
+---
+# variables for nat
+
+nat_external_interface: enp0s3
+nat_internal_interface: enp0s8 

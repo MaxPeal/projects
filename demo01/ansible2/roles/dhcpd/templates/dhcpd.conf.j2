@@ -1,0 +1,26 @@
+ddns-update-style none;
+log-facility local7;
+#default-lease-time: 600;
+#max-lease-time: 7200;
+authoritative;
+
+{% for dhcpd_subnet in dhcpd_subnets %}
+subnet {{dhcpd_subnet.subnet}} netmask {{dhcpd_subnet.subnet_mask}} {
+
+        option routers                  {{dhcpd_subnet.router_default}};
+        option subnet-mask              {{dhcpd_subnet.subnet_mask}};
+        option broadcast-address        {{dhcpd_subnet.broadcast}};
+        option domain-name-servers      {{dhcpd_subnet.dns|join(', ')}};
+        option ntp-servers              {{dhcpd_subnet.ntp|join(', ')}};
+	option domain-name		{{dhcpd_subnet.domain_name}};
+        #option netbios-name-servers     192.168.1.1;
+        #option netbios-node-type 2;
+	range {{dhcpd_subnet.range_min}} {{dhcpd_subnet.range_max}};
+        default-lease-time 86400;
+        max-lease-time 86400;
+
+}
+{% endfor %}
+
+
+

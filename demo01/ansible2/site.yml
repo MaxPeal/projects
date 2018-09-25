@@ -1,5 +1,9 @@
 ---
 
-- hosts: controller
+- hosts: gateway
+  #become: yes
+  #become_method: su
+  #become_user: root
   roles:
-    - ex01
+    - nat
+    - dhcpd

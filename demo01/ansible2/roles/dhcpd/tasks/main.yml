@@ -1,0 +1,36 @@
+---
+# tasks file for dhcpd
+
+- name: install isc-dhcp-server
+  apt:
+    name: isc-dhcp-server
+    state: present
+    update_cache: true
+  become: yes
+
+- name: configure isc-dhcp-server initscript (setting interfaces)
+  replace:
+    path: /etc/default/isc-dhcp-server
+    regexp: '^INTERFACES=.*$'
+    replace: "INTERFACES=\"{{ dhcpd_interfaces|join(' ') }}\""
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+
+- name: configure dhcpd.conf (setting subnets)
+  template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+
+- name: restart dhcpd
+  service:
+    name: isc-dhcp-server
+    state: restarted
+  become: yes
