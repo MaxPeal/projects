@@ -6,4 +6,7 @@
   #become_user: root
   roles:
     - nat
-    - dhcpd
+    #- dhcpd
+    - dnsmasq
+    - chrony
+    #- bind9 #under development not ready

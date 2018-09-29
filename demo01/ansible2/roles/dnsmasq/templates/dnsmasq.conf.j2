@@ -1,0 +1,27 @@
+domain-needed
+bogus-priv
+no-resolv
+no-poll
+
+# dynamic nameserver info.
+{% for nameserver in ansible_dns.nameservers %}
+#server={{ nameserver }}
+{% endfor %}
+
+# static nameserver info.
+{% for nameserver in dnsmasq_resources.nameservers %}
+server={{ nameserver }}
+{% endfor %}
+
+{% for conf in dnsmasq_conf %}
+interface={{ conf.interface }}
+local=/{{ conf.domain }}/
+domain={{ conf.domain }},{{ conf.cidr }}
+dhcp-range={{ conf.interface }},{{ conf.dhcp_range_from }},{{ conf.dhcp_range_to }},{{ conf.dhcp_lease_time }}
+dhcp-option={{ conf.interface }},option:router,{{ conf.gateway }}
+dhcp-option={{ conf.interface }},option:ntp-server,{{ conf.gateway }}
+
+{% endfor %}
+
+expand-hosts
+

@@ -1,2 +1,15 @@
 ---
 # vars file for dnsmasq
+
+dnsmasq_resources:
+  nameservers:
+    # lab network default name servers
+    - 10.2.1.205
+    - 10.2.1.225
+    #- "8.8.8.8"
+    #- "8.8.4.4"
+
+dnsmasq_conf:
+- {interface: enp0s8, domain: "external", cidr: "192.168.100.0/24", dhcp_range_from: "192.168.100.101", dhcp_range_to: "192.168.100.109", dhcp_lease_time: "4h", gateway: "192.168.100.3", dns_forward: "8.8.8.8"}
+- {interface: enp0s9, domain: "internal", cidr: "192.168.101.0/24", dhcp_range_from: "192.168.101.101", dhcp_range_to: "192.168.101.109", dhcp_lease_time: "4h", gateway: "192.168.101.3", dns_forward: "8.8.8.8"}
+- {interface: enp0s10, domain: "management", cidr: "192.168.102.0/24", dhcp_range_from: "192.168.102.101", dhcp_range_to: "192.168.102.109", dhcp_lease_time: "4h", gateway: "192.168.102.3", dns_forward: "8.8.8.8"}

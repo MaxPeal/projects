@@ -1,2 +1,9 @@
 ---
 # handlers file for dhcpd
+
+- name: restarting dhcpd
+  service:
+    name: isc-dhcp-server
+    state: restarted
+  become: yes
+

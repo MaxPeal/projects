@@ -17,6 +17,8 @@
     group: root
     mode: 0644
     backup: yes
+  notify:
+    - restarting dhcpd
   become: yes
 
 - name: configure dhcpd.conf (setting subnets)
@@ -27,10 +29,13 @@
     group: root
     mode: 0644
     backup: yes
+  notify:
+    - restarting dhcpd
   become: yes
 
-- name: restart dhcpd
-  service:
-    name: isc-dhcp-server
-    state: restarted
-  become: yes
+# note: moved to the 'handlers' folder
+#- name: restarting dhcpd
+#  service:
+#    name: isc-dhcp-server
+#    state: restarted
+#  become: yes

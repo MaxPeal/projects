@@ -29,6 +29,10 @@
 #iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
 #iptables -A FORWARD -i enp0s3 -o enp0s8 -m state --state RELATED,ESTABLISHED -j ACCEPT
 #iptables -A FORWARD -i enp0s8 -o enp0s3 -j ACCEPT  
+- name: flushing all iptables rules
+  iptables:
+    flush: true
+  become: yes
 
 - name: configuring NAT masquerading on external port
   iptables:
@@ -42,7 +46,6 @@
   iptables:
     chain: FORWARD
     in_interface: "{{ nat_external_interface }}"
-    out_interface: "{{ nat_internal_interface }}"
     ctstate: ESTABLISHED,RELATED
     jump: ACCEPT
   become: yes

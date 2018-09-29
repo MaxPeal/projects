@@ -1,2 +1,20 @@
 ---
 # tasks file for dnsmasq
+
+- name: installing dnsmasq
+  apt:
+    name: dnsmasq
+    state: present
+    update_cache: true
+  become: yes
+
+- name: modifying dnsmasq.conf
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restarting dnsmasq
+  become: yes

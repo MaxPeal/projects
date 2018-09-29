@@ -1,0 +1,9 @@
+---
+# tasks file for chrony
+
+- name: installing chrony (the next generation ntp)
+  apt:
+    name: chrony
+    state: present
+    update_cache: true
+  become: yes
