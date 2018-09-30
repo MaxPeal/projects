@@ -1,0 +1,11 @@
+---
+# tasks file for enp
+- name: generating network interfaces file
+  template:
+    src: interfaces.j2
+    dest: /etc/network/interfaces.test
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes

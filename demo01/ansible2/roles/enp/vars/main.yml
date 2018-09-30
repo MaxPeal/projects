@@ -1,0 +1,19 @@
+---
+# vars file for enp
+interfaces:
+  - device: "enp0s9"
+    ipv4:
+      bootproto: "static"
+      address: "{{ ansible_enp0s9.ipv4.address }}"
+      broadcast: "{{ ansible_enp0s9.ipv4.broadcast }}"
+      netmask: "{{ ansible_enp0s9.ipv4.netmask }}"
+      network: "{{ ansible_enp0s9.ipv4.network }}"
+      default_gateway: "" 
+  - device: "enp0s10"
+    ipv4:
+      bootproto: "dhcp"
+      default_gateway: "" 
+  - device: "enp0s16"
+    ipv4:
+      bootproto: "dhcp"
+      default_gateway: "DHCP_ASSIGNED" 

@@ -1,0 +1,34 @@
+#jinja2: lstrip_blocks: True
+auto lo
+iface lo inet loopback
+
+source /etc/network/interface.d/*.cfg
+
+{% for interface in interfaces %}
+auto {{ interface.device }}
+iface {{ interface.device }} inet {{ interface.ipv4.bootproto }}
+  {% if interface.ipv4.bootproto == "static" %}
+    address {{ interface.ipv4.address }}
+    netmask {{ interface.ipv4.netmask }}
+    broadcast {{ interface.ipv4.broadcast }}
+    {% if interface.ipv4.network %}
+    network {{ interface.ipv4.network }}
+    {% endif %}
+    {% if interface.ipv4.default_gateway %}
+    gateway {{ interface.ipv4.default_gateway }}
+    {% endif %}
+  {% elif interface.ipv4.bootproto == "dhcp" %}
+    {% if interface.ipv4.default_gateway %}
+      {% if interface.ipv4.default_gateway == "DHCP_ASSIGNED" %}
+    post-up ip route del default dev {{ ansible_default_ipv4.alias }} || true 
+    post-up dhclient $IFACE
+    pre-down ip route add default dev {{ ansible_default_ipv4.alias }}
+      {% endif %}
+    {% endif %}
+  {% elif interface.ipv4.bootproto == "manual" %}
+
+  {% endif %}
+
+
+
+{% endfor %}
