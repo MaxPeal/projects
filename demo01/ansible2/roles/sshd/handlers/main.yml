@@ -1,0 +1,8 @@
+---
+# handlers file for sshd
+
+- name: restarting sshd
+  service:
+    name: sshd
+    state: restarted
+  become: yes

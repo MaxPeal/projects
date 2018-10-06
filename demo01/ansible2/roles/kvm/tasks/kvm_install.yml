@@ -1,0 +1,61 @@
+---
+# tasks file for kvm
+
+- name: installing qemu-kvm
+  apt:
+    name: qemu-kvm
+    state: present
+    update_cache: true
+  become: yes
+
+- name: installing libvirt-bin
+  apt:
+    name: libvirt-bin
+    state: present
+    update_cache: true
+  become: yes
+
+- name: installing ubuntu-vm-builder
+  apt:
+    name: ubuntu-vm-builder
+    state: present
+    update_cache: true
+  become: yes
+
+- name: installing bridge-utils
+  apt:
+    name: bridge-utils
+    state: present
+    update_cache: true
+  become: yes
+
+- name: debug task_action (1)
+  debug:
+    msg: "task_action = {{ task_action }}"
+
+#- name: creating kvm user
+#  include_role:
+#    name: user
+##  vars:
+##    user:
+##      action: create
+##      name: "{{ kvm_user_name }}"
+#  #become: yes
+#
+#- name: debug task_action (2)
+#  debug:
+#    msg: "task_action = {{ task_action }}"
+#
+#- name: adding user to the group libvirtd
+#  user: 
+#    #name: "{{ ansible_user_id }}"
+#    name: "{{ kvm_user_name }}"
+#    groups: libvirtd
+#    append: yes
+#  become: yes
+#
+#- name: reset ssh connection to allow user changes to affect 'current login user'
+#  meta: reset_connection
+#
+#- name: testing libvirt output
+#  command: virsh list --all  

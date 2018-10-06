@@ -1,0 +1,57 @@
+---
+# tasks file for user
+
+- name: debug var user
+  debug:
+    msg: "user = {{ user }}"
+
+- name: adding user
+  user:
+    name: "{{ item.name }}"
+    #groups: sudo
+    password: "{{ item.password }}"
+    append: yes
+    generate_ssh_key: "{{ item.ssh_key }}"
+  become: yes
+  with_items:
+    "{{ users }}"
+
+- name: setting sudo no password to the user
+  lineinfile:
+    path: /etc/sudoers
+    line: "{{ item.name }} ALL=(ALL) NOPASSWD:ALL"
+    state: present
+  when: item.nopasswd == true
+  become: yes
+  with_items:
+    "{{ users }}"
+
+- name: adding groups
+  group:
+    name: "{{ item }}"  
+  with_items:
+    "{{ user_groups_admin | union(user_groups_guest) }}"
+  become: yes
+
+- name: adding user to the group libvirtd
+  user:
+    #name: "{{ ansible_user_id }}"
+    name: "{{ item.0.name }}"
+    #groups: libvirtd
+    groups: "{{ item.1 }}"
+    append: yes
+  become: yes
+  notify: resetting ssh connection
+  with_subelements:
+    - "{{ users }}"
+    - groups
+
+# reset ssh connection to allow user changes to affect 'current login user'
+#- name: resetting ssh connection
+#  meta: reset_connection
+
+#- name: testing libvirt output
+#  command: virsh list --all
+#  register: virsh_list
+#- debug:
+#   var: virsh_list.stdout_lines

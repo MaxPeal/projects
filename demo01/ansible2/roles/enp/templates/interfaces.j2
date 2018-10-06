@@ -1,34 +1,46 @@
-#jinja2: lstrip_blocks: True
+#jinja2: lstrip_blocks: True, trim_blocks: True
 auto lo
 iface lo inet loopback
 
 source /etc/network/interface.d/*.cfg
 
 {% for interface in interfaces %}
+  {% if interface.status == "STATUS_CHANGED" %}
 auto {{ interface.device }}
 iface {{ interface.device }} inet {{ interface.ipv4.bootproto }}
-  {% if interface.ipv4.bootproto == "static" %}
+    {# case: static #}
+    {% if interface.ipv4.bootproto and interface.ipv4.bootproto == "static" %}
     address {{ interface.ipv4.address }}
     netmask {{ interface.ipv4.netmask }}
     broadcast {{ interface.ipv4.broadcast }}
-    {% if interface.ipv4.network %}
+      {% if interface.ipv4.network %}
     network {{ interface.ipv4.network }}
-    {% endif %}
-    {% if interface.ipv4.default_gateway %}
+      {% endif %}
+      {% if interface.ipv4.default_gateway %}
     gateway {{ interface.ipv4.default_gateway }}
-    {% endif %}
-  {% elif interface.ipv4.bootproto == "dhcp" %}
-    {% if interface.ipv4.default_gateway %}
-      {% if interface.ipv4.default_gateway == "DHCP_ASSIGNED" %}
+      {% endif %}
+    {# case: dhcp #}
+    {% elif interface.ipv4.bootproto == "dhcp" %}
+      {% if interface.ipv4.default_gateway %}
+        {% if interface.ipv4.default_gateway == "DHCP_ASSIGNED" %}
     post-up ip route del default dev {{ ansible_default_ipv4.alias }} || true 
     post-up dhclient $IFACE
     pre-down ip route add default dev {{ ansible_default_ipv4.alias }}
+        {% endif %}
       {% endif %}
+    {# case: manual #}
+    {% elif interface.ipv4.bootproto == "manual" %}
+  
     {% endif %}
-  {% elif interface.ipv4.bootproto == "manual" %}
+  {% elif interface.status == "STATUS_CURRENT" or 
+	interface.status == "STATUS_KEEP" %}
+auto {{ interface.device }}
+iface {{ interface.device }} inet static
+    address: {{ hostvars[ansible_hostname]["ansible_"+interface.device].ipv4.address }}
+    netmask: {{ hostvars[ansible_hostname]["ansible_"+interface.device].ipv4.netmask }}
+    broadcast: {{ hostvars[ansible_hostname]["ansible_"+interface.device].ipv4.broadcast }}
+    network: {{ hostvars[ansible_hostname]["ansible_"+interface.device].ipv4.network }}
+    #TODO: developer notes: add gateway logic later  
 
   {% endif %}
-
-
-
 {% endfor %}

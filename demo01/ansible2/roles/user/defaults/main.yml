@@ -1,0 +1,33 @@
+---
+# defaults file for user
+
+user:
+  name: vagrant
+  # default password: vagrant
+  #user_password: $6$52Q7u45jXt$km6ktHMvas2ZRekf06J9CBtHEIR.J8ExICM1Lx1gqoSgzwD9ZWceXIlZAEJIM85dagtt4DQXGUJ3KmBn78jWr1
+  # default password: Super123
+  password: $6$7l/tr/ZFrF0NyyfM$NGSn2er.NnOl0PTCdyFFfFRLj2Wf2dziS1cMNdR8iEn6x3NGpxtORuYJSuhx6vgBBx0qXAOCA2WlDsuKblVNv0
+  #user_nopasswd: no 
+  #nopasswd: yes
+  
+  #default action
+  #action: create
+
+user_default_password: $6$7l/tr/ZFrF0NyyfM$NGSn2er.NnOl0PTCdyFFfFRLj2Wf2dziS1cMNdR8iEn6x3NGpxtORuYJSuhx6vgBBx0qXAOCA2WlDsuKblVNv0
+user_groups_admin:
+  - sudo
+  - lab1
+user_groups_guest:
+  - lab2
+
+users:
+  - name: vagrant
+    password: "{{user_default_password}}"
+    nopasswd: yes
+    groups: "{{user_groups_admin}}"
+    ssh_key: yes
+  - name: vagrant2
+    password: "{{user_default_password}}"
+    nopasswd: no
+    groups: "{{user_groups_guest}}"
+    ssh_key: yes

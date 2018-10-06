@@ -1,0 +1,7 @@
+---
+# handlers file for user
+
+# reset ssh connection to allow user changes to affect 'current login user'
+- name: resetting ssh connection
+  meta: reset_connection
+

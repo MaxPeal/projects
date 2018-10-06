@@ -1,0 +1,34 @@
+---
+# tasks file for sshd
+
+- name: allowing sshd PubkeyAuthentication -> yes
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^PubkeyAuthentication no.*$'
+    replace: 'PubkeyAuthentication yes'
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  notify:
+    - restarting sshd
+  tags:
+    - sshd_pubkey_auth_allow
+  
+- name: allowing sshd PasswordAuthentication -> yes
+  
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication no.*$'
+    replace: 'PasswordAuthentication yes'
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  notify:
+    - restarting sshd
+  tags:
+    - sshd_password_auth_allow
+  

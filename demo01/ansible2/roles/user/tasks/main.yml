@@ -1,0 +1,9 @@
+---
+
+- name: debug action
+  debug:
+    msg: "action = {{user.action}}"
+
+- import_tasks: user_create.yml
+  when: user.action == "create"
+

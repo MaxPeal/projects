@@ -1,8 +1,10 @@
 ---
 
-- hosts: gateway
+- hosts: localhost
+#- hosts: gateway
   #become: yes
   #become_method: su
   #become_user: root
   roles:
-    - enp
+    - role: ex01
+      tags: ["t1"]

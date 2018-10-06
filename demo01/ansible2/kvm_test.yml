@@ -1,0 +1,13 @@
+---
+
+- hosts: phy01
+  #become: yes
+  #become_method: su
+  #become_user: root
+  roles:
+    #- {role: user, task_action: create}
+        
+    - { role: kvm, task_action: install }
+  vars:
+    #user_name: phy01
+    kvm_user_name: phy01
