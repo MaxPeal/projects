@@ -1,0 +1,43 @@
+---
+# tasks file for maas
+
+- name: adding maas stable repository from ppa install its signing key
+  apt_repository:
+    repo: 'ppa:maas/stable'
+  become: yes
+
+- name: installing maas
+  apt:
+    name: maas
+    state: present
+    update_cache: true
+  become: yes
+
+- name: creating maas admin
+  command: "maas createadmin --username={{maas_add_admin}} --email={{maas_add_admin}}@localhost --password={{maas_add_default_password}}"
+  register: output
+  ignore_errors: yes
+  become: yes
+-  debug:
+     var: output
+
+- name: obtaining maas-region apikey (in output.stdout)
+  command: "maas-region apikey --username={{maas_add_admin}}"
+  register: output
+  become: yes
+-  debug:
+     var: output
+
+- name: login to maas
+  command: "maas login {{maas_add_admin}} http://localhost:5240/MAAS/api/2.0 {{output.stdout}}"
+  register: output
+  become: yes
+- debug:
+    var: output
+
+- name: logout from maas
+  command: "maas logout {{maas_add_admin}}"
+  register: output
+  become: yes
+- debug:
+    var: output

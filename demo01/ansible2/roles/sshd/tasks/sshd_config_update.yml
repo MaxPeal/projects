@@ -1,0 +1,17 @@
+---
+# tasks file for sshd
+
+- name: updating sshd_config 
+  replace:
+    path: /etc/ssh/sshd_config
+    regexp: '^{{ item.key }} {{ item.value_from }}.*$'
+    replace: '{{ item.key }} {{ item.value_to }}'
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  notify:
+    - restarting sshd
+  with_items:
+    "{{ sshd_params }}"

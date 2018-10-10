@@ -1,33 +1,11 @@
 ---
-# tasks file for ex01
-#- name: print host name
-#  debug: var=ansible_hostname
-#- name: print default variables - part 1
-#  debug: var=var0
-#- name: print default variables - part 2
-#  debug: var=var0.a
-#- name: print custom variables - part 1
-#  debug: var=var1
-#- name: print custom variables - part 2
-#  debug: var=var1.a
-#- name: print custom variables - part 3
-#  debug: var=var2
-#- name: template ex01.cfg
-#  template:
-#    src: ex01.cfg.j2
-#    dest: ~/test1/conf.d/ex01.cfg
-#    mode: 777
+- debug:
+    var: v1
+  when: v1 is defined
 
-- name: do t1
-  command: echo "do t1"
-  tags:
-    - t1
-
-- name: do t2
-  command: echo "do t1"
-  tags:
-    - t2
-- name: do t3
-  command: echo "do t1"
-  tags:
-    - t3
+- debug:
+    msg: "v1 is not defined"
+  when: v1 is not defined
+#- import_tasks: task1.yml
+#  when: v1 == "ex01_task1"
+  

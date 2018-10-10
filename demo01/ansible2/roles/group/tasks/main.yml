@@ -1,0 +1,5 @@
+---
+# tasks file for group
+
+- import_tasks: group_add.yml
+  when: group_task_action == "group_add"

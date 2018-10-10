@@ -1,10 +1,34 @@
 ---
 
-- hosts: localhost
-#- hosts: gateway
-  #become: yes
-  #become_method: su
-  #become_user: root
+#- hosts: physical
+- hosts: phy02
   roles:
-    - role: ex01
-      tags: ["t1"]
+    - { role: group, group_task_action: group_add }
+    - { role: user, user_task_action: user_add }
+    - { role: kvm, kvm_task_action: kvm_add }
+    - { role: nw }
+    - { role: ipmitool, ipmitool_task_action: ipmi_add }
+    
+  vars_files:
+    - test_vars.yml
+    #- nw_if_vagrant_client.yml
+    - nw_if_baremetal_compute.yml
+
+
+- hosts: none
+  roles:
+    - { role: group, group_task_action: group_add }
+    - { role: user, user_task_action: user_add }
+    - { role: kvm, kvm_task_action: kvm_add }
+    - { role: nw }
+    
+  vars_files:
+    - test_vars.yml
+    - nw_if_vagrant_client.yml
+    #- nw_if_baremetal_compute.yml
+
+#- hosts: phy02
+#  roles:
+#    - { role: maas, maas_action: maas_add }
+#  vars_files:
+#    - test_vars.yml

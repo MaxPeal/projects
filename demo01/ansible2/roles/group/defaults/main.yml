@@ -1,0 +1,5 @@
+---
+# defaults file for group
+
+group_task_action: none
+group_groups: []

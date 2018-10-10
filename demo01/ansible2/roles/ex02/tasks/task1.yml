@@ -1,0 +1,16 @@
+---
+
+- name: debugging v1
+  debug:
+    var: v1
+
+- name: debugging ex02_v1
+  debug:
+    var: ex02_v1
+- name: debugging v2
+  debug:
+    var: v2
+  when: ex02_v1 == 'test'
+- name: debugging v3
+  debug:
+    var: v3

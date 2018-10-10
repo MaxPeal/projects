@@ -1,0 +1,7 @@
+---
+- name: installing ipmitool
+  apt:
+    name: ipmitool
+    state: present
+    update_cache: true
+  become: yes

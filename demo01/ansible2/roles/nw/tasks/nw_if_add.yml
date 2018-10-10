@@ -1,0 +1,11 @@
+---
+# tasks file for nw
+- name: generating network interfaces file
+  template:
+    src: interfaces.j2
+    dest: /etc/network/nw_add_interfaces.test
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes

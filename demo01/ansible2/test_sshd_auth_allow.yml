@@ -1,8 +1,10 @@
 ---
 
 - hosts: physical
-  #become: yes
-  #become_method: su
-  #become_user: root
   roles:
-    - sshd
+    - { role: sshd, sshd_task_action: config_update }
+  vars:
+    sshd_params:
+      - { key: PublicKeyAuthentication, value_from: "no", value_to: "yes" }
+      - { key: PasswordAuthentication, value_from: "no", value_to: "yes" }
+

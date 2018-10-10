@@ -5,6 +5,7 @@ nat01
 dnsmasq01
 
 [client]
+client00
 client01
 client02
 
@@ -12,12 +13,9 @@ client02
 control ansible_connection=local
 
 [physical]
-phy01 ansible_user=ubuntu #ansible_port=5000
-phy02 ansible_user=ubuntu #ansible_port=5000
-phy03 ansible_user=ubuntu #ansible_port=5000
-phy01 #ansible_user=vagrant #ansible_port=5000
-phy02 #ansible_user=vagrant #ansible_port=5000
-phy03 #ansible_user=vagrant #ansible_port=5000
+phy01 ansible_host=10.100.204.101 ansible_user=ubuntu #ansible_port=5000
+phy02 ansible_host=10.100.204.102 ansible_user=ubuntu #ansible_port=5000
+phy03 ansible_host=10.100.204.103 ansible_user=ubuntu #ansible_port=5000
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3

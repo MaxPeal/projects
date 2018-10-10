@@ -1,4 +1,5 @@
 ---
 # defaults file for kvm_install
 
-kvm_user_name: kvm
+kvm_groups: []
+kvm_user_name: kvm 

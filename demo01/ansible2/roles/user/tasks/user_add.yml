@@ -1,20 +1,17 @@
 ---
 # tasks file for user
 
-- name: debug var user
-  debug:
-    msg: "user = {{ user }}"
-
 - name: adding user
   user:
     name: "{{ item.name }}"
     #groups: sudo
-    password: "{{ item.password }}"
+    #password: "{{ item.password }}"
+    password: "{{ user_default_password }}"
     append: yes
     generate_ssh_key: "{{ item.ssh_key }}"
   become: yes
   with_items:
-    "{{ users }}"
+    "{{ user_users }}"
 
 - name: setting sudo no password to the user
   lineinfile:
@@ -24,26 +21,26 @@
   when: item.nopasswd == true
   become: yes
   with_items:
-    "{{ users }}"
+    "{{ user_users }}"
 
 - name: adding groups
-  group:
-    name: "{{ item }}"  
-  with_items:
-    "{{ user_groups_admin | union(user_groups_guest) }}"
-  become: yes
+  import_role: 
+    name: group
+  vars:
+    group_groups: "{{ user_groups }}"
+    group_task_action: group_add
+  when: user_groups is defined
 
-- name: adding user to the group libvirtd
+- name: adding users to the designated group(s)
   user:
     #name: "{{ ansible_user_id }}"
     name: "{{ item.0.name }}"
-    #groups: libvirtd
     groups: "{{ item.1 }}"
     append: yes
   become: yes
-  notify: resetting ssh connection
+  #notify: resetting ssh connection
   with_subelements:
-    - "{{ users }}"
+    - "{{ user_users }}"
     - groups
 
 # reset ssh connection to allow user changes to affect 'current login user'

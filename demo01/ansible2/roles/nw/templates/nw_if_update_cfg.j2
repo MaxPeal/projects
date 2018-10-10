@@ -1,0 +1,90 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+
+{% if nw_if_update_main == true %}
+auto lo
+iface lo inet loopback
+
+source /etc/network/interface.d/*.cfg
+{% endif %}
+
+{% for interface in nw_if_update_interfaces %}
+{% if interface.enable_cfg_device is not defined or interface.enable_cfg_device != false %}
+
+{{ interface.boot_mode }} {{ interface.device }}
+{% if interface.enable_cfg_bootproto_current_default is not defined or interface.enable_cfg_bootproto_current_default != false %}
+{%	if interface.bootproto_current_default is defined	%}
+iface {{ interface.device }} inet static
+	address: {{ ansible_default_ipv4.address }}
+	netmask: {{ ansible_default_ipv4.netmask }}
+	#network: {{ ansible_default_ipv4.network }}
+	gateway: {{ ansible_default_ipv4.gateway }}
+	dns-nameservers: {{ ansible_dns.nameservers|join(" ") }}
+{%	endif %}
+{% endif %}
+{% if interface.enable_cfg_bootproto_static is not defined or interface.enable_cfg_bootproto_static != false %}
+{%	if interface.bootproto_static is defined	%}
+iface {{ interface.device }} inet static
+	address {{ interface.bootproto_static.ipv4.address }}
+	netmask {{ interface.bootproto_static.ipv4.netmask }}
+{%		if interface.bootproto_static.ipv4.broadcast is defined	and
+		   interface.bootproto_static.ipv4.broadcast|length
+%}
+	broadcast {{ interface.bootproto_static.ipv4.broadcast }}
+{%		endif	%}
+{%		if interface.bootproto_static.ipv4.gateway is defined	and
+		   interface.bootproto_static.ipv4.gateway|length
+%}
+	gateway {{ interface.bootproto_static.ipv4.gateway }}
+{%		endif	%}
+{%		if interface.bootproto_static.ipv4.dns_nameservers is defined	and
+		   interface.bootproto_static.ipv4.dns_nameservers|length
+%}
+	dns-nameservers {{ interface.bootproto_static.ipv4.dns_nameservers|join(" ") }}
+{%		endif	%}
+{%		if interface.bootproto_static.ipv4.dns_search is defined	and
+		   interface.bootproto_static.ipv4.dns_search|length
+%}
+	dns-search {{ interface.bootproto_static.ipv4.dns_search|join(" ") }}
+{%		endif	%}
+{%	endif %}
+{% endif %}
+{% if interface.enable_cfg_bootproto_dhcp is not defined or interface.enable_cfg_bootproto_dhcp != false %}
+{%	if interface.bootproto_dhcp is defined	%}
+iface {{ interface.device }} inet dhcp
+#TODO: To add gateway assigned by dhcp logic below
+{%	endif %}
+{% endif %}
+{% if interface.enable_cfg_bootproto_manual is not defined or interface.enable_cfg_bootproto_manual != false %}
+{%	if interface.bootproto_manual is defined	%}
+iface {{ interface.device }} inet manual
+{%	endif	%}
+{% endif %}
+{% if interface.enable_cfg_bond_slave is not defined or interface.enable_cfg_bond_slave != false %}
+{%	if interface.bond_slave_lacp is defined	%}
+	bond-master {{ interface.bond_slave_lacp.bond_master }}
+{%	endif	%}
+{% endif %}
+{% if interface.enable_cfg_bond_master is not defined or interface.enable_cfg_bond_master != false %}
+{%	if interface.bond_master_lacp is defined	%}
+	slaves {{ interface.bond_master_lacp.bond_slaves|join(" ") }}
+	bond-mode: {{ NW_IF_UPDATE_BOND_MODE_LACP }}
+	bond-miimon 
+	bond-lacp-rate 1
+{%	endif	%}
+{% endif %}
+{% if interface.enable_cfg_vlan is not defined or interface.enable_cfg_vlan != false %}
+{%	if interface.vlan is defined	%}
+	vlan-raw-device {{ interface.vlan.vlan_raw_device }}
+{%	endif	%}
+{% endif %}
+{% if interface.enable_cfg_bridge is not defined or interface.enable_cfg_bridge != false %}
+{%	if interface.bridge is defined	%}
+	bridge_ports {{ interface.bridge.bridge_ports|join(" ") }}
+	bridge_hello 2
+	bridge_stp {{ interface.bridge.bridge_stp }}
+	bridge_fd 9
+{%	endif	%}
+{% endif %}
+
+{% endif	%}
+{% endfor	%}

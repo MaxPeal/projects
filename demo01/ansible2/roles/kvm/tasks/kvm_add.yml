@@ -29,18 +29,23 @@
     update_cache: true
   become: yes
 
-- name: debug task_action (1)
-  debug:
-    msg: "task_action = {{ task_action }}"
+- name: creating kvm user
+  include_role:
+    name: user
+  vars:
+    user_groups:
+      "{{ kvm_groups }}"
+    user_task_action: user_add
+    user_users:
+      - name: kvm
+        nopasswd: no 
+        ssh_key: yes
+        groups: 
+          "{{ kvm_groups }}"
 
-#- name: creating kvm user
-#  include_role:
-#    name: user
-##  vars:
-##    user:
-##      action: create
-##      name: "{{ kvm_user_name }}"
-#  #become: yes
+
+
+
 #
 #- name: debug task_action (2)
 #  debug:

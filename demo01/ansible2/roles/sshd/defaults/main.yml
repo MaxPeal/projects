@@ -1,2 +1,6 @@
 ---
 # defaults file for sshd
+
+#sshd_params:
+#  - { key: PublicKeyAuthentication, value_from: no, value_to: yes }
+#  - { key: PasswordAuthentication, value_from: no, value_to: yes }

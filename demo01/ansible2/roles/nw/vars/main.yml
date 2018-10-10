@@ -1,0 +1,109 @@
+---
+## vars file for nw
+#nw_if_update_cfg_src: nw_if_update_cfg.j2
+##nw_if_update_cfg_dest: /etc/network/interfaces.d/50-cloud-init.cfg
+#nw_if_update_cfg_dest: /etc/network/interfaces
+#
+##_iface0: enp0s8
+##_iface1: enp0s9
+#_iface0: eno1
+#_iface1: eno2
+#_bond0: bond0
+#
+##_vlan_base: "{{_bond0}}"	# with network bonding
+#_vlan_base: "{{_iface1}}"	# without network bonding
+#_vlan0: "{{_vlan_base}}.10"
+#_vlan1: "{{_vlan_base}}.11"
+#_vlan2: "{{_vlan_base}}.12"
+#
+#_br0_ports: "{{_vlan0}}"
+#_br0: br10
+#_br1_ports: "{{_vlan1}}"
+#_br1: br11
+#_br2_ports: "{{_vlan2}}"
+#_br2: br12
+#
+#nw_if_update_interfaces:
+#- enable: no
+#  device: "{{_iface0}}"
+#  boot_mode: auto
+#  #bootproto_manual: yes
+#  bootproto_dhcp: yes
+##  bond_slave_lacp:
+##    bond_master: "{{_bond0}}"
+#- enable: no
+#  device: "{{_iface1}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  #bootproto_dhcp: yes
+##  bond_slave_lacp:
+##    bond_master: "{{_bond0}}"
+#
+## # bonding layer (with network bonding)
+##- enable: no
+##  device: bond0
+##  boot_mode: auto
+##  bootproto_manual: yes
+##  bond_master_lacp:
+##    bond_slaves:
+##      - "{{_iface0}}"
+##      - "{{_iface1}}"
+##    #bond_mode: "{{NW_IF_UPDATE_BOND_MODE_LACP}}"
+##    #bond_miimon: 100
+##    #bond_lacp_rate: 1
+#
+#
+## vlan layer
+#- device: "{{_vlan0}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  vlan:
+#    vlan_raw_device: "{{_vlan_base}}"
+#- device: "{{_vlan1}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  vlan:
+#    vlan_raw_device: "{{_vlan_base}}"
+#- device: "{{_vlan2}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  vlan:
+#    vlan_raw_device: "{{_vlan_base}}"
+#
+## bridge layer
+#- device: "{{_br0}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  #bootproto_static:
+#  #  ipv4:
+#  #    address: 192.168.10.1
+#  #    netmask: 255.255.255.0
+#  bridge:
+#    bridge_ports:
+#      - "{{_br0_ports}}"
+#    bridge_stp: on
+#
+#- device: "{{_br1}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  #bootproto_static:
+#  #  ipv4:
+#  #    address: 192.168.11.1
+#  #    netmask: 255.255.255.0
+#  bridge:
+#    bridge_ports:
+#      - "{{_br1_ports}}"
+#    bridge_stp: on
+#
+#- device: "{{_br2}}"
+#  boot_mode: auto
+#  bootproto_manual: yes
+#  #bootproto_static:
+#  #  ipv4:
+#  #    address: 192.168.12.1
+#  #    netmask: 255.255.255.0
+#  bridge:
+#    bridge_ports:
+#      - "{{_br2_ports}}"
+#    bridge_stp: on
+#

@@ -1,0 +1,11 @@
+---
+# tasks file for user
+
+
+- name: adding groups
+  group:
+    name: "{{ item }}"  
+  with_items:
+    "{{ group_groups }}"
+  become: yes
+

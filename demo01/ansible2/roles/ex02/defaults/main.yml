@@ -1,0 +1,5 @@
+---
+# defaults file for ex01
+var0:
+  a: 100
+  b: 101

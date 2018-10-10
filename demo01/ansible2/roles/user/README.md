@@ -13,6 +13,24 @@ Role Variables
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
+user_task_action
+example:
+user_task_action: user_all
+
+user_default_password
+
+user_groups
+example:
+user_groups
+  - lab_a
+  - lab_b
+
+user_users 
+example:
+user_users:
+  - { name: user1, nopasswd: yes, groups: "{{_groups_a|union(_groups_c)}}", ssh_key: yes }
+  - { name: user2, nopasswd: yes, groups: "{{_groups_b}}", ssh_key: yes }
+
 Dependencies
 ------------
 

@@ -1,0 +1,170 @@
+---
+# vars file for nw
+nw_if_update_cfg_src: nw_if_update_cfg.j2
+nw_if_update_cfg_dest: /etc/network/interfaces.d/50-cloud-init.cfg
+#nw_if_update_cfg_src: nw_if_update_interfaces.j2
+#nw_if_update_cfg_dest: /etc/network/interfaces
+
+nw_if_update_main: no # meaning located at /etc/network/interfaces.d/#.cfg
+#nw_if_update_main: yes # meaning located at /etc/network/interfaces
+
+
+#_iface0: enp0s8
+#_iface1: enp0s9
+#_iface0: eno1
+#_iface1: eno2
+_iface0: enp0s3
+_iface1: enp0s8
+_iface2: enp0s9
+_iface3: enp0s10
+
+_bond0: bond0
+
+#_vlan_base: "{{_bond0}}"	# with network bonding
+_vlan_base: "{{_iface2}}"	# without network bonding
+_vlan0: "{{_vlan_base}}.10"
+_vlan1: "{{_vlan_base}}.11"
+_vlan2: "{{_vlan_base}}.12"
+
+_br0_ports: "{{_vlan0}}"
+_br0: br10
+_br1_ports: "{{_vlan1}}"
+_br1: br11
+_br2_ports: "{{_vlan2}}"
+_br2: br12
+
+nw_if_update_interfaces:
+- enable_cfg_device: yes
+  enable_cfg_bootproto_current_default: no
+  enable_cfg_bootproto_manual: no
+  enable_cfg_bootproto_dhcp: yes
+  enable_cfg_bootproto_static: no
+  device: "{{_iface0}}"
+  boot_mode: auto
+  #bootproto_dhcp: yes
+  bootproto_dhcp:
+    default_gateway_provided: no
+  bootproto_static:
+    ipv4:
+      address: <ip address>
+      netmask: <netmask>
+- enable_cfg_device: no
+  device: "{{_iface1}}"
+  boot_mode: auto
+  bootproto_current_default: no
+  bootproto_manual: yes
+  bootproto_static:
+    ipv4:
+      address: 192.168.100.4
+      netmask: 255.255.255.0
+- enable_cfg_device: yes
+  device: "{{_iface2}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  #bootproto_dhcp: yes
+#  bond_slave_lacp:
+#    bond_master: "{{_bond0}}"
+- enable_cfg_device: yes
+  device: "{{_iface3}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  #bootproto_dhcp: yes
+#  bond_slave_lacp:
+#    bond_master: "{{_bond0}}"
+
+# # bonding layer (with network bonding)
+- enable_cfg_device: no
+  # choose one from below cfg options
+  enable_cfg_bootproto_current_default: no
+  enable_cfg_bootproto_manual: no
+  enable_cfg_bootproto_dhcp: yes
+  enable_cfg_bootproto_static: no
+  # choose one from below cfg options
+  enable_cfg_bond_slave: no
+  enable_cfg_bond_master: no
+  enable_cfg_vlan: no
+  enable_cfg_bridge: no
+  # actual configurations start below
+  device: bond0
+  boot_mode: auto
+  # bootproto section (choose one from current_default, dhcp, manual, or static)
+  bootproto_current_default: yes
+  bootproto_dhcp: yes
+  bootproto_manual: yes
+  bootproto_static:
+    ipv4:
+      address: 192.168.100.4
+      netmask: 255.255.255.0
+  # another section (choose one from bond_master, bond_slave, vlan, or bridge)
+  bond_master_lacp:
+    bond_slaves:
+      - "{{_iface0}}"
+      - "{{_iface1}}"
+    #bond_mode: "{{NW_IF_UPDATE_BOND_MODE_LACP}}"
+    #bond_miimon: 100
+    #bond_lacp_rate: 1
+  bond_slave_lacp:
+    bond_master: "{{_bond0}}"
+  vlan:
+    vlan_raw_device: "{{_vlan_base}}"
+  bridge:
+    bridge_ports:
+      - "{{_br0_ports}}"
+    bridge_stp: on
+
+
+# vlan layer
+- enable_cfg_device: yes
+  device: "{{_vlan0}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  vlan:
+    vlan_raw_device: "{{_vlan_base}}"
+- device: "{{_vlan1}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  vlan:
+    vlan_raw_device: "{{_vlan_base}}"
+- device: "{{_vlan2}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  vlan:
+    vlan_raw_device: "{{_vlan_base}}"
+
+# bridge layer
+- device: "{{_br0}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  #bootproto_static:
+  #  ipv4:
+  #    address: 192.168.10.1
+  #    netmask: 255.255.255.0
+  bridge:
+    bridge_ports:
+      - "{{_br0_ports}}"
+    bridge_stp: "on"
+
+- device: "{{_br1}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  #bootproto_static:
+  #  ipv4:
+  #    address: 192.168.11.1
+  #    netmask: 255.255.255.0
+  bridge:
+    bridge_ports:
+      - "{{_br1_ports}}"
+    bridge_stp: "on"
+
+- device: "{{_br2}}"
+  boot_mode: auto
+  bootproto_manual: yes
+  #bootproto_static:
+  #  ipv4:
+  #    address: 192.168.12.1
+  #    netmask: 255.255.255.0
+  bridge:
+    bridge_ports:
+      - "{{_br2_ports}}"
+    bridge_stp: "on"
+

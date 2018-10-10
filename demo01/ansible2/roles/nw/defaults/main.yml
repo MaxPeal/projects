@@ -1,0 +1,5 @@
+---
+# defaults file for nw
+# Constants
+NW_IF_UPDATE_BOND_MODE_LACP: 4
+NW_IF_UPDATE_DHCP_ASSIGNED: dhcp_assigned

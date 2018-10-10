@@ -1,0 +1,6 @@
+---
+# tasks file for ipmitool
+
+- name: installing ipmitool
+  import_tasks: ipmitool_add.yml
+  when: ipmitool_task_action == "ipmitool_add"

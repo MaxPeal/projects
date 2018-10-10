@@ -1,0 +1,8 @@
+---
+- hosts: phy01
+  roles:
+    - {role: ex01, v1: ex01_task1}
+  vars:
+    v2: "v2_from_playbook"
+    v3: "v3_from_playbook"
+  

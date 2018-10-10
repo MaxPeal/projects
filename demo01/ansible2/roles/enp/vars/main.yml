@@ -1,24 +1,28 @@
 ---
 # vars file for enp
 interfaces:
-  - device: "enp0s8"
-    status: "STATUS_KEEP"
-  - device: "enp0s9"
-    status: "STATUS_CHANGED"
+  - device: enp0s8
+    status: STATUS_KEEP
+  - device: enp0s9
+    status: STATUS_CHANGED
     ipv4:
-      bootproto: "static"
+      bootproto: static
       address: "{{ ansible_enp0s9.ipv4.address }}"
       broadcast: "{{ ansible_enp0s9.ipv4.broadcast }}"
       netmask: "{{ ansible_enp0s9.ipv4.netmask }}"
       network: "{{ ansible_enp0s9.ipv4.network }}"
       default_gateway: "" 
-  - device: "enp0s10"
-    status: "STATUS_CHANGED"
+    bridge:
+      bridge_ports: enp0s3
+      bridge_stp: off
+      bridge_maxwait: 5
+  - device: enp0s10
+    status: STATUS_CHANGED
     ipv4:
-      bootproto: "dhcp"
+      bootproto: dhcp
       default_gateway: "" 
-  - device: "enp0s16"
-    status: "STATUS_CHANGED"
+  - device: enp0s16
+    status: STATUS_CHANGED
     ipv4:
-      bootproto: "dhcp"
-      default_gateway: "DHCP_ASSIGNED" 
+      bootproto: dhcp
+      default_gateway: DHCP_ASSIGNED 

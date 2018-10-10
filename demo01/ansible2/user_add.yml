@@ -6,4 +6,4 @@
   #become_method: su
   #become_user: root
   roles:
-    - {role: user, user: {action: create}}
+    - {role: user, user_task_action: add}

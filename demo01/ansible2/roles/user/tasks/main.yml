@@ -2,8 +2,8 @@
 
 - name: debug action
   debug:
-    msg: "action = {{user.action}}"
+    msg: "action = {{user_task_action}}"
 
-- import_tasks: user_create.yml
-  when: user.action == "create"
+- import_tasks: user_add.yml
+  when: user_task_action == "user_add"
 

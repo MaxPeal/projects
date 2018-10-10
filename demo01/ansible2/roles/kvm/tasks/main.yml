@@ -1,5 +1,5 @@
 ---
 # tasks file for kvm
 
-- import_tasks: kvm_install.yml
-  when: task_action == "install"
+- import_tasks: kvm_add.yml
+  when: kvm_task_action == "kvm_add"

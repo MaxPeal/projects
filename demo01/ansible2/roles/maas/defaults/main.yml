@@ -1,2 +1,7 @@
 ---
 # defaults file for maas
+
+maas_add_admin: admin
+maas_add_default_password: Super123
+maas_add_task_action: none
+

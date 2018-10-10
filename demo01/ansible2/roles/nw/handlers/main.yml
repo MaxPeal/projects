@@ -1,0 +1,8 @@
+---
+# handlers file for nw
+
+- name: restarting network
+  service:
+    name: networking
+    state: restarted
+  become: yes

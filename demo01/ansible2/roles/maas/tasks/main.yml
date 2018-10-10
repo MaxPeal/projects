@@ -1,17 +1,4 @@
 ---
-# tasks file for maas
 
-- name: adding maas stable repository from ppa install its signing key
-  apt_repository:
-    repo: 'ppa:maas/stable'
-  become: yes
-
-- name: installing maas
-  apt:
-    name: maas
-    state: present
-    update_cache: true
-  become: yes
-
-- name: creating maas admin
-
+- import_tasks: maas_add.yml
+  when: maas_action == "maas_add"

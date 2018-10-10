@@ -1,0 +1,32 @@
+---
+
+
+
+ ### network
+
+
+ ### kvm
+
+kvm_groups: [kvm, libvirtd, sudo]
+kvm_user_name: kvm
+
+ ### maas
+
+_groups_a:
+  - lab_a
+  - lab_a1
+_groups_b:
+  - lab_b
+  - lab_b1
+  - lab_b2
+_groups_c:
+  - lab_c
+
+maas_add_admin: admin03
+maas_add_default_password: Super123
+
+user_groups:
+  "{{ _groups_a | union(_groups_b) | union(_groups_c) }}"
+user_users:
+  - { name: user1, nopasswd: yes, groups: "{{_groups_a|union(_groups_c)}}", ssh_key: yes }
+  - { name: user2, nopasswd: yes, groups: "{{_groups_b}}", ssh_key: yes }

@@ -1,0 +1,37 @@
+---
+# tasks file for nw
+
+- name: installing vlan utilities
+  apt:
+    name: vlan
+    state: present
+    update_cache: true
+  become: yes
+
+- name: adding 8021q module 
+  lineinfile:
+    path: /etc/modules
+    line: 8021q
+    state: present
+  become: yes
+
+- name: installing bridge utilities
+  apt:
+    name: bridge-utils
+    state: present
+    update_cache: true
+  notify: restarting network
+  become: yes
+
+- name: generating network interfaces file
+  template:
+    #src: nw_if_update_cfg.j2
+    src: "{{ nw_if_update_cfg_src }}"
+    dest: "{{ nw_if_update_cfg_dest }}"
+    #dest: /etc/network/interfaces.test
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify: restarting network
+  become: yes
