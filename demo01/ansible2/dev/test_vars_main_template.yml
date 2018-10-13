@@ -1,0 +1,11 @@
+---
+### test_main_variables
+test_main_var_0: "varsfiles 0"
+test_main_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
+test_main_vars_0: 
+  - varsfiles 0
+  - varsfiles 1
+  - varsfiles 2
+test_main_vars_1: 
+  - {key0: varsfiles 0, key1: varsfiles 01}
+  - {key0: varsfiles 1, key1: varsfiles 11}

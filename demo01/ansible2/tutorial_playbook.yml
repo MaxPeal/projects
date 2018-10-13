@@ -1,0 +1,7 @@
+---
+
+- hosts:
+    - localhost
+  roles:
+    - {role: tutorial1, action: tutorial1_add}
+    - {role: tutorial2, action: tutorial2_add}

@@ -1,7 +1,0 @@
----
-
-- hosts: phy01
-  roles:
-    - { role: kvm, kvm_task_action: add }
-  vars:
-    kvm_user_name: kvm

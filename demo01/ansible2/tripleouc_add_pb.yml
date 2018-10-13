@@ -1,0 +1,22 @@
+---
+
+- hosts:
+  #- localhost
+  - centos7_phy01
+  roles:
+  - {role: tripleouc, tripleouc_task_action: tripleouc_add}
+
+  vars:
+    tripleouc_add_external_interface: eno1
+    tripleouc_add_internal_interface: eno2
+    tripleouc_add_public_host: 10.100.204.105
+    tripleouc_add_admin_host: 10.100.204.106
+    tripleouc_add_user: stack
+#    tripleouc_add_user_groups: [sudo, stack] # optional
+#    tripleouc_add_groups: [sudo, stack] # optional
+    tripleouc_add_user_sudo_nopasswd: yes
+    tripleouc_add_user_ssh_key: yes
+    tripleouc_add_url_python2_tripleo_repos:
+      https://trunk.rdoproject.org/centos7/current/python2-tripleo-repos-0.0.1-0.20181007202255.dca903e.el7.noarch.rpm
+    tripleouc_add_openstack_revision: Queen
+    

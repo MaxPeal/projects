@@ -1,7 +1,37 @@
 ---
+- name: enabling ipmi kernel modules
+  modprobe:
+    name: ipmi_si
+    state: present
+  become: yes
+- modprobe:
+    name: ipmi_devintf
+    state: present
+  become: yes
+#  lineinfile:
+#    path: /etc/modprobe
+#    line: ipmi_si
+#    state: present
+#  become: yes
+#- lineinfile:
+#    path: /etc/modprobe
+#    line: ipmi_devintf
+#    state: present
+#  become: yes
+
+
 - name: installing ipmitool
   apt:
     name: ipmitool
     state: present
     update_cache: true
+  become: yes
+
+- name: printing ipmi info
+  #command: "ipmitool lan print | grep 'IP Address'"
+  command: "ipmitool lan print"
+  register: output
+  become: yes
+- debug:
+    var: output.stdout_lines
   become: yes

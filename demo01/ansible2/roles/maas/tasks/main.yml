@@ -1,4 +1,4 @@
 ---
 
 - import_tasks: maas_add.yml
-  when: maas_action == "maas_add"
+  when: maas_task_action == "maas_add"

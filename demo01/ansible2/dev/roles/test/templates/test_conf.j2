@@ -1,0 +1,29 @@
+#jinja2: lstrip_blocks: True, trim_blocks: True
+
+{# if a variable is defined and not empty #}
+{% if	test_main_var_0 is defined and
+	test_main_var_0 | length > 0
+%}
+test_main_var_0: {{ test_main_var_0 }}
+{% endif %}
+
+{# handling loop for dictionary #}
+{% for key, value in test_main_var_1.iteritems() %} 
+test_main_var_1.{{key}}: {{value}}
+{% endfor %}
+
+{# handling loop for array #}
+{% for item in test_main_vars_0 %}
+test_main_vars_0.{{loop.index0}}: {{ item }}
+{% endfor %}
+
+{# handling loop for array #}
+{% for dict in test_main_vars_1 %}
+{% 	for key, value in dict.iteritems() %} 
+test_main_vars_1.{{key}}: {{value}}
+{% 	endfor %}
+{% endfor %}
+
+# references:
+# http://jinja.pocoo.org/docs/2.10/templates/#for
+	

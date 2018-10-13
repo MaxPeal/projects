@@ -1,0 +1,12 @@
+---
+# tasks file for tripleouc
+
+- debug: {var: tripleouc_task_action}
+
+- name: installing tripleo undercloud
+  include_tasks: tripleouc_add_centos7.yml
+  when: 
+    "
+    ansible_distribution == 'CentOS' and
+    tripleouc_task_action == 'tripleouc_add'
+    "

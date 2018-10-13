@@ -1,0 +1,24 @@
+---
+
+- name: adding GPG key for the official docker repo to the system
+  command: apt-key add $(curl -fsSL https://download.docker.com/linux/ubuntu/gpg
+  become: yes
+- name: adding the docker repo to apt sources
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable
+    state: present
+    update-cache: yes
+  become: yes
+
+- name: making sure to install from the docker repo
+  command: apt-cache policy docker-ce
+  become: yes
+
+- name: installing docker
+  apt:
+    name: docker-ce
+    state: present
+    update_cache: true
+  become: yes
+ 
+- name: adding  

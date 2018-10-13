@@ -1,0 +1,8 @@
+---
+- name: debug for test_delete
+  debug: {msg: task - test_delete }
+- debug: {var: test_delete_var_0}
+- debug: {var: test_delete_var_1}
+- debug: {var: test_delete_vars_0}
+- debug: {var: test_delete_vars_1}
+

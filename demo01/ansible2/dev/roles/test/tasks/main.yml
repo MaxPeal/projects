@@ -1,0 +1,134 @@
+---
+- name: debug for test_main
+  debug: {msg: task - test_main }
+- debug: {var: action}
+- debug: {var: test_main_var_0}
+- debug: {var: test_main_var_1}
+- debug: {var: test_main_vars_0}
+- debug: {var: test_main_vars_1}
+
+- name: calling task - test_create.yml
+  import_tasks: test_create.yml
+#  vars:
+#    test_create_var_0: "from test main 0"
+#    test_create_var_1: {msg1: from test main 0, msg2: from test main 1}
+#    test_create_vars_0: 
+#      - from test main 0
+#      - from test main 1
+#      - from test main 2
+#    test_create_vars_1: 
+#      - {key0: from test main 0, key1: from test main 01}
+#      - {key0: from test main 1, key1: from test main 11}
+#     
+  when: action == "create"
+
+- name: calling task - test_read.yml
+  import_tasks: test_read.yml
+  vars:
+    test_read_var_0: "from test main 0"
+    test_read_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_read_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_read_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "read"
+
+- name: calling task - test_update.yml
+  import_tasks: test_update.yml
+  vars:
+    test_update_var_0: "from test main 0"
+    test_update_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_update_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_update_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "update"
+
+- name: calling task - test_delete.yml
+  import_tasks: test_delete.yml
+  vars:
+    test_delete_var_0: "from test main 0"
+    test_delete_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_delete_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_delete_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "delete"
+
+- name: calling directly task - test_create.yml under role - test
+  import_role:
+    name: test
+    tasks_from: test_create
+  vars:
+    test_create_var_0: "from test main 0"
+    test_create_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_create_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_create_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "test_create"
+
+- name: calling directly task - test_read.yml under role - test
+  import_role:
+    name: test
+    tasks_from: test_read
+  vars:
+    test_read_var_0: "from test main 0"
+    test_read_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_read_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_read_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "test_read"
+
+- name: calling directly task - test_update.yml under role - test
+  import_role:
+    name: test
+
+    tasks_from: test_update
+  vars:
+    test_update_var_0: "from test main 0"
+    test_update_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_update_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_update_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "test_update"
+
+- name: calling directly task - test_delete.yml under role - test
+  import_role:
+    name: test
+    tasks_from: test_delete
+  vars:
+    test_delete_var_0: "from test main 0"
+    test_delete_var_1: {msg1: from test main 0, msg2: from test main 1}
+    test_delete_vars_0: 
+      - from test main 0
+      - from test main 1
+      - from test main 2
+    test_delete_vars_1: 
+      - {key0: from test main 0, key1: from test main 01}
+      - {key0: from test main 1, key1: from test main 11}
+  when: action == "test_delete"
+
+# references:
+# https://docs.ansible.com/ansible/latest/modules/import_role_module.html
+

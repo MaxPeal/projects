@@ -22,8 +22,18 @@ _groups_b:
 _groups_c:
   - lab_c
 
-maas_add_admin: admin03
-maas_add_default_password: Super123
+maas_add_admin: admin06
+maas_add_kvm_password: Super123
+maas_add_kvm_user: "{{kvm_user_name}}"
+maas_add_kvm_hosts:
+  #- phy01
+  - phy02
+  - phy03
+  
+
+ ### sshd
+sshd_params:
+  - {key: PasswordAuthentication, value_from: "no", value_to: "yes"}
 
 user_groups:
   "{{ _groups_a | union(_groups_b) | union(_groups_c) }}"

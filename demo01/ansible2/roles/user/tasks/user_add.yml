@@ -26,10 +26,11 @@
 - name: adding groups
   import_role: 
     name: group
+    tasks_from: group_add
   vars:
     group_groups: "{{ user_groups }}"
-    group_task_action: group_add
-  when: user_groups is defined
+    #group_task_action: group_add
+  when: (user_groups is defined) and (user_groups|length >0)
 
 - name: adding users to the designated group(s)
   user:

@@ -1,0 +1,8 @@
+---
+- name: debug for test_create
+  debug: {msg: task - test_create }
+- debug: {var: test_create_var_0}
+- debug: {var: test_create_var_1}
+- debug: {var: test_create_vars_0}
+- debug: {var: test_create_vars_1}
+

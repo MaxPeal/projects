@@ -16,7 +16,19 @@ control ansible_connection=local
 phy01 ansible_host=10.100.204.101 ansible_user=ubuntu #ansible_port=5000
 phy02 ansible_host=10.100.204.102 ansible_user=ubuntu #ansible_port=5000
 phy03 ansible_host=10.100.204.103 ansible_user=ubuntu #ansible_port=5000
-
-[all:vars]
+[physical:vars]
 ansible_python_interpreter=/usr/bin/python3
+
+[ubuntu16]
+ubuntu16_phy01 ansible_host=10.100.204.101 ansible_user=ubuntu #ansible_port=5000
+ubuntu16_phy02 ansible_host=10.100.204.102 ansible_user=ubuntu #ansible_port=5000
+ubuntu16_phy03 ansible_host=10.100.204.103 ansible_user=ubuntu #ansible_port=5000
+[ubuntu16:vars]
+ansible_python_interpreter=/usr/bin/python3
+
+[centos7]
+centos7_phy01 ansible_host=10.100.204.101 ansible_user=centos #ansible_port=5000
+centos7_phy02 ansible_host=10.100.204.102 ansible_user=centos #ansible_port=5000
+centos7_phy03 ansible_host=10.100.204.103 ansible_user=centos #ansible_port=5000
+
 

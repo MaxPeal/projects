@@ -1,0 +1,35 @@
+---
+# tasks file for tutorial
+
+- debug: {var: action}
+
+
+- name: calling other role
+  import_role:
+    name: tutorial3
+    #tasks_from: tutorial3_add 
+  vars:
+    action: update
+
+- name: calling action = "create"
+  import_tasks:
+    name: tutorial2_create
+  when: action == "create"
+
+- name: calling action = "read"
+  import_tasks:
+    name: tutorial2_read
+  when: action == "read"
+
+- name: calling action = "update"
+  import_tasks:
+    name: tutorial2_delete
+  when: action == "update"
+
+- name: calling action = "delete"
+  import_tasks:
+    name: tutorial2_delete
+  when: action == "delete"
+
+# reference:
+# https://docs.ansible.com/ansible/latest/modules/import_role_module.html

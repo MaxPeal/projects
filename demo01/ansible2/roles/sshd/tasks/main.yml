@@ -2,4 +2,4 @@
 # tasks file for sshd
 
 - import_tasks: sshd_config_update.yml
-  when: sshd_task_action == "config_update"
+  when: sshd_task_action == "sshd_config_update"

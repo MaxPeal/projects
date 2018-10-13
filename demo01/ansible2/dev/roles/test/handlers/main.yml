@@ -1,0 +1,38 @@
+---
+### test_handler_main
+- name: test_handler_main_0
+  debug: {msg: test_handler_main_0 is notified!}
+  listen: test_handler_main
+- name: test_handler_main_1
+  debug: {msg: test_handler_main_1 is notified!}
+  listen: test_handler_main
+### test_handler_create
+- name: test_handler_create_0
+  debug: {msg: test_handler_create_0 is notified!}
+  listen: test_handler_create
+- name: test_handler_create_1
+  debug: {msg: test_handler_create_1 is notified!}
+  listen: test_handler_create
+### test_handler_read
+- name: test_handler_read_0
+  debug: {msg: test_handler_read_0 is notified!}
+  listen: test_handler_read
+- name: test_handler_read_1
+  debug: {msg: test_handler_read_1 is notified!}
+  listen: test_handler_read
+### test_handler_update
+- name: test_handler_update_0
+  debug: {msg: test_handler_update_0 is notified!}
+  listen: test_handler_update
+- name: test_handler_update_1
+  debug: {msg: test_handler_update_1 is notified!}
+  listen: test_handler_update
+### test_handler_delete
+- name: test_handler_delete_0
+  debug: {msg: test_handler_delete_0 is notified!}
+  listen: test_handler_delete
+- name: test_handler_delete_1
+  debug: {msg: test_handler_delete_1 is notified!}
+  listen: test_handler_delete
+
+

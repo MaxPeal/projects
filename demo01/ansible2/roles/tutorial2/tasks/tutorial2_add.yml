@@ -1,0 +1,4 @@
+---
+- debug: {var: tutorial2_add_var1}
+- debug: {var: tutorial2_add_var2}
+

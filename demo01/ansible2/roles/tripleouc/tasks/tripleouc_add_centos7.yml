@@ -1,0 +1,72 @@
+---
+
+- debug: {var: tripleouc_add_external_interface}
+- debug: {var: tripleouc_add_internal_interface}
+- debug: {var: tripleouc_add_groups}
+- debug: {var: tripleouc_add_user}
+- debug: {var: tripleouc_add_user_groups}
+- debug: {var: tripleouc_add_user_sudo_nopasswd}
+- debug: {var: tripleouc_add_url_python2_tripleo_repos }
+- debug: {var: tripleouc_add_openstack_revision }
+
+- name: creating tripleo undercloud user
+  include_role:
+    name: user
+    tasks_from: user_add
+  vars:
+    user_groups:
+      "{{ 
+        tripleouc_add_groups 
+        if tripleouc_add_groups is defined 
+        else [] 
+      }}"
+    user_task_action: user_add
+    user_users:
+      - name: "{{ tripleouc_add_user }}"
+        nopasswd: "{{ tripleouc_add_user_sudo_nopasswd }}"
+        ssh_key: "{{ tripleouc_add_user_ssh_key }}"
+        groups: 
+          "{{ tripleouc_add_user_groups if tripleouc_add_user_groups is defined else [] }}"
+
+- name: Installing python2-tripleo-repos
+  yum:
+    name: "{{ tripleouc_add_url_python2_tripleo_repos }}"
+    state: present
+  become: yes
+
+- name: Enabling the current opentstack repos
+  command: "tripleo-repos -b queens current ceph"
+  become: yes
+  become_flags: -E
+
+- name: Installing TripleO CLI
+  yum:
+    name: python-tripleoclient
+    state: present
+  become: yes
+
+#- name: Prepare the configuration file
+#  copy:
+#    src: /usr/share/python-tripleoclient/undercloud.conf.sample
+#    dest: ~/undercloud.conf.sample
+#    owner: "{{tripleouc_add_user}}"
+#    group: "{{tripleouc_add_user}}"
+#    #mode: 0744
+#  become: yes
+
+- name: Preparing the configuration file
+  template:
+    src: undercloud.conf.j2
+    dest: ~/undercloud.conf
+    owner: "{{tripleouc_add_user}}"
+    group: "{{tripleouc_add_user}}"
+    mode: 0644
+    backup: yes
+  become_user: "{{tripleouc_add_user}}"
+  become: yes
+    
+- name: Installing undercloud
+  command: openstack undercloud install
+  become_user: "{{tripleouc_add_user}}"
+  become: yes
+

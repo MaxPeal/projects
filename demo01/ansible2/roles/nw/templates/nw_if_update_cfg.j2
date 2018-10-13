@@ -14,11 +14,14 @@ source /etc/network/interface.d/*.cfg
 {% if interface.enable_cfg_bootproto_current_default is not defined or interface.enable_cfg_bootproto_current_default != false %}
 {%	if interface.bootproto_current_default is defined	%}
 iface {{ interface.device }} inet static
-	address: {{ ansible_default_ipv4.address }}
-	netmask: {{ ansible_default_ipv4.netmask }}
-	#network: {{ ansible_default_ipv4.network }}
-	gateway: {{ ansible_default_ipv4.gateway }}
+	address {{ ansible_default_ipv4.address }}
+	netmask {{ ansible_default_ipv4.netmask }}
+	network {{ ansible_default_ipv4.network }}
+	gateway {{ ansible_default_ipv4.gateway }}
 	dns-nameservers: {{ ansible_dns.nameservers|join(" ") }}
+	post-up ip route del default dev {{ ansible_default_ipv4.alias }} || true 
+	post-up ip route add default via {{ ansible_default_ipv4.gateway }}
+	pre-down ip route add default dev {{ ansible_default_ipv4.alias }}
 {%	endif %}
 {% endif %}
 {% if interface.enable_cfg_bootproto_static is not defined or interface.enable_cfg_bootproto_static != false %}
@@ -52,6 +55,13 @@ iface {{ interface.device }} inet static
 {%	if interface.bootproto_dhcp is defined	%}
 iface {{ interface.device }} inet dhcp
 #TODO: To add gateway assigned by dhcp logic below
+{%		if interface.bootproto_dhcp.default_gateway_provided is defined and
+		interface.bootproto_dhcp.default_gateway_provided == True
+%}
+	post-up ip route del default dev {{ ansible_default_ipv4.alias }} || true 
+	post-up dhclient $IFACE
+	pre-down ip route add default dev {{ ansible_default_ipv4.alias }}
+{%		endif	%}
 {%	endif %}
 {% endif %}
 {% if interface.enable_cfg_bootproto_manual is not defined or interface.enable_cfg_bootproto_manual != false %}

@@ -1,6 +1,0 @@
----
-- name: entering ex02 main
-  debug:
-    var: v1
-- import_tasks: task1.yml
-  when: v1 == "ex02_task1"

@@ -13,11 +13,43 @@
     update_cache: true
   become: yes
 
-- name: creating maas admin
+- name: creating maas user (maas app owner) ssh-key pair - for connecting to KVM host(s)
+  user:
+    name: maas
+    shell: /bin/bash
+    generate_ssh_key: yes
+    state: present
+  become: yes
+
+- name: installing sshpass
+  apt:
+    name: sshpass
+    state: present
+    update_cache: true
+  become: yes
+
+- name: registering ssh public key at designated user@hosts
+  command: "sshpass -p {{maas_add_kvm_password}} ssh-copy-id -o StrictHostKeyChecking=no {{maas_add_kvm_user}}@{{item}}"
+  with_items:
+    "{{maas_add_kvm_hosts}}"
+  ignore_errors: yes
+  become: yes
+  become_user: maas
+
+- name: checking if the admin user already exist
+  command: "maas-region apikey --username={{maas_add_admin}}"
+  register: api_output
+  become: yes
+  no_log: yes
+  failed_when: no
+  #ignore_errors: yes
+
+- name: creating maas admin (admin user)
   command: "maas createadmin --username={{maas_add_admin}} --email={{maas_add_admin}}@localhost --password={{maas_add_default_password}}"
   register: output
   ignore_errors: yes
   become: yes
+  when: api_output.stdout == ""
 -  debug:
      var: output
 

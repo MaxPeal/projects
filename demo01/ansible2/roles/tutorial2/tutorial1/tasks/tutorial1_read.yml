@@ -1,0 +1,4 @@
+---
+- debug: {msg: tutorial1_read is called!}
+- debug: {var: tutorial1_read_var1}  
+- debug: {var: tutorial1_read_var2}  
