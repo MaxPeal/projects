@@ -1,51 +1,19 @@
 ---
 ### test_main_variables
-#test_main_var_0: "varsfiles 0"
-#test_main_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-#test_main_vars_0: 
-#  - varsfiles 0
-#  - varsfiles 1
-#  - varsfiles 2
-#test_main_vars_1: 
-#  - {key0: varsfiles 0, key1: varsfiles 01}
-#  - {key0: varsfiles 1, key1: varsfiles 11}
+#test_main_var: "value from task defaults - main"
+#test_main_var_as_action_create: "value from task defaults - main"
+#test_main_var_as_action_read: "value from task defaults - main"
+#test_main_var_as_action_update: "value from task defaults - main"
+#test_main_var_as_action_delete: "value from task defaults - main"
+#test_main_var_as_action_test_create: "value from task defaults - main"
+#test_main_var_as_action_test_read: "value from task defaults - main"
+#test_main_var_as_action_test_update: "value from task defaults - main"
+#test_main_var_as_action_test_delete: "value from task defaults - main"
 ### test_create_variables
-#test_create_var_0: "varsfiles 0"
-#test_create_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-#test_create_vars_0: 
-#  - varsfiles 0
-#  - varsfiles 1
-#  - varsfiles 2
-#test_create_vars_1: 
-#  - {key0: varsfiles 0, key1: varsfiles 01}
-#  - {key0: varsfiles 1, key1: varsfiles 11}
+#test_create_var: "value from task defaults - create"
 ### test_read_variables
-#test_read_var_0: "varsfiles 0"
-#test_read_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-#test_read_vars_0: 
-#  - varsfiles 0
-#  - varsfiles 1
-#  - varsfiles 2
-#test_read_vars_1: 
-#  - {key0: varsfiles 0, key1: varsfiles 01}
-#  - {key0: varsfiles 1, key1: varsfiles 11}
+#test_read_var: "value from task defaults - read"
 ### test_update_variables
-#test_update_var_0: "varsfiles 0"
-#test_update_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-#test_update_vars_0: 
-#  - varsfiles 0
-#  - varsfiles 1
-#  - varsfiles 2
-#test_update_vars_1: 
-#  - {key0: varsfiles 0, key1: varsfiles 01}
-#  - {key0: varsfiles 1, key1: varsfiles 11}
+#test_update_var: "value from task defaults - update"
 ### test_delete_variables
-#test_delete_var_0: "varsfiles 0"
-#test_delete_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-#test_delete_vars_0: 
-#  - varsfiles 0
-#  - varsfiles 1
-#  - varsfiles 2
-#test_delete_vars_1: 
-#  - {key0: varsfiles 0, key1: varsfiles 01}
-#  - {key0: varsfiles 1, key1: varsfiles 11}
+#test_delete_var: "value from task defaults - delete"

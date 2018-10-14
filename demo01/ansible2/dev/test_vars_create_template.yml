@@ -1,11 +1,3 @@
 ---
-### test_create_variables
-test_create_var_0: "varsfiles 0"
-test_create_var_1: {msg1: varsfiles 0, msg2: varsfiles 1}
-test_create_vars_0: 
-  - varsfiles 0
-  - varsfiles 1
-  - varsfiles 2
-test_create_vars_1: 
-  - {key0: varsfiles 0, key1: varsfiles 01}
-  - {key0: varsfiles 1, key1: varsfiles 11}
+## test_create_variables
+test_create_var: "value from playbook varsfiles - create"

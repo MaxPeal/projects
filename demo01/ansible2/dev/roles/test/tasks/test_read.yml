@@ -1,8 +1,5 @@
 ---
 - name: debug for test_read
   debug: {msg: task - test_read }
-- debug: {var: test_read_var_0}
-- debug: {var: test_read_var_1}
-- debug: {var: test_read_vars_0}
-- debug: {var: test_read_vars_1}
+- debug: {var: test_read_var}
 

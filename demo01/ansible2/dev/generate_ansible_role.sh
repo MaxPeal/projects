@@ -38,71 +38,23 @@ VARSFILE_TEMPLATE_FILE_READ=$TEMPLATE_VARSFILES_DIR/${ROLE}_vars_read_template.y
 VARSFILE_TEMPLATE_FILE_UPDATE=$TEMPLATE_VARSFILES_DIR/${ROLE}_vars_update_template.yml
 VARSFILE_TEMPLATE_FILE_DELETE=$TEMPLATE_VARSFILES_DIR/${ROLE}_vars_delete_template.yml
 VARS_FILE=$VARS_DIR/main.yml
-
-
-
-
-
-###### defaults/main.yml
-#PURPOSE="default"
-#SPECIFICATION="from ${ROLE} defaults"
-#cat <<EOF > $DEFAULTS_FILE
-#---
-#### ${ROLE}_main_variables
-#${CMT2}${ROLE}_main_var_0: "${SPECIFICATION} 0"
-#${CMT2}${ROLE}_main_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-#${CMT2}${ROLE}_main_vars_0: 
-#${CMT2}  - ${SPECIFICATION} 0
-#${CMT2}  - ${SPECIFICATION} 1
-#${CMT2}  - ${SPECIFICATION} 2
-#${CMT2}${ROLE}_main_vars_1: 
-#${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-#${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-#### ${ROLE}_create_variables
-#${CMT2}${ROLE}_create_var_0: "${SPECIFICATION} 0"
-#${CMT2}${ROLE}_create_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-#${CMT2}${ROLE}_create_vars_0: 
-#${CMT2}  - ${SPECIFICATION} 0
-#${CMT2}  - ${SPECIFICATION} 1
-#${CMT2}  - ${SPECIFICATION} 2
-#${CMT2}${ROLE}_create_vars_1: 
-#${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-#${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-#### ${ROLE}_read_variables
-#${CMT2}${ROLE}_read_var_0: "${SPECIFICATION} 0"
-#${CMT2}${ROLE}_read_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-#${CMT2}${ROLE}_read_vars_0: 
-#${CMT2}  - ${SPECIFICATION} 0
-#${CMT2}  - ${SPECIFICATION} 1
-#${CMT2}  - ${SPECIFICATION} 2
-#${CMT2}${ROLE}_read_vars_1: 
-#${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-#${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-#### ${ROLE}_update_variables
-#${CMT2}${ROLE}_update_var_0: "${SPECIFICATION} 0"
-#${CMT2}${ROLE}_update_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-#${CMT2}${ROLE}_update_vars_0: 
-#${CMT2}  - ${SPECIFICATION} 0
-#${CMT2}  - ${SPECIFICATION} 1
-#${CMT2}  - ${SPECIFICATION} 2
-#${CMT2}${ROLE}_update_vars_1: 
-#${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-#${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-#### ${ROLE}_delete_variables
-#${CMT2}${ROLE}_delete_var_0: "${SPECIFICATION} 0"
-#${CMT2}${ROLE}_delete_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-#${CMT2}${ROLE}_delete_vars_0: 
-#${CMT2}  - ${SPECIFICATION} 0
-#${CMT2}  - ${SPECIFICATION} 1
-#${CMT2}  - ${SPECIFICATION} 2
-#${CMT2}${ROLE}_delete_vars_1: 
-#${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-#${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-#EOF
+# task variables
+VAR_MAIN=${ROLE}_main_var
+VAR_MAIN_ACTION_CREATE=${ROLE}_main_var_as_action_create
+VAR_MAIN_ACTION_READ=${ROLE}_main_var_as_action_read
+VAR_MAIN_ACTION_UPDATE=${ROLE}_main_var_as_action_update
+VAR_MAIN_ACTION_DELETE=${ROLE}_main_var_as_action_delete
+VAR_MAIN_ACTION_ROLE_CREATE=${ROLE}_main_var_as_action_${ROLE}_create
+VAR_MAIN_ACTION_ROLE_READ=${ROLE}_main_var_as_action_${ROLE}_read
+VAR_MAIN_ACTION_ROLE_UPDATE=${ROLE}_main_var_as_action_${ROLE}_update
+VAR_MAIN_ACTION_ROLE_DELETE=${ROLE}_main_var_as_action_${ROLE}_delete
+VAR_CREATE=${ROLE}_create_var
+VAR_READ=${ROLE}_read_var
+VAR_UPDATE=${ROLE}_update_var
+VAR_DELETE=${ROLE}_delete_var
 
 ##### handlers/main.yml
 PURPOSE="handler"
-SPECIFICATION="handler"
 cat <<EOF > $HANDLERS_FILE
 ---
 ### ${ROLE}_${PURPOSE}_main
@@ -146,137 +98,76 @@ EOF
 
 ##### tasks/main.yml
 PURPOSE="main"
-SPECIFICATION="from ${ROLE} main"
+SPECIFICATION="value from ${ROLE}_main"
 cat <<EOF > $TASKS_FILE_MAIN
 ---
 ${CMT}- name: debug for ${ROLE}_${PURPOSE}
 ${CMT}  debug: {msg: task - ${ROLE}_${PURPOSE} }
 ${CMT}- debug: {var: action}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_var_0}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_var_1}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_vars_0}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_vars_1}
+${CMT}- debug: {var: $VAR_MAIN}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_CREATE}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_READ}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_UPDATE}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_DELETE}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_ROLE_CREATE}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_ROLE_READ}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_ROLE_UPDATE}
+${CMT}#- debug: {var: $VAR_MAIN_ACTION_ROLE_DELETE}
 ${CMT}
 ${CMT}- name: calling task - ${ROLE}_create.yml
 ${CMT}  import_tasks: ${ROLE}_create.yml
 ${CMT}  vars:
-${CMT}    ${ROLE}_create_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_create_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_create_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_create_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
-${CMT}     
+${CMT}    $VAR_CREATE: "{{ $VAR_MAIN_ACTION_CREATE if $VAR_MAIN_ACTION_CREATE is defined else '_undefined_' }}"
 ${CMT}  when: action == "create"
 ${CMT}
 ${CMT}- name: calling task - ${ROLE}_read.yml
 ${CMT}  import_tasks: ${ROLE}_read.yml
 ${CMT}  vars:
-${CMT}    ${ROLE}_read_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_read_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_read_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_read_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}    $VAR_READ: "{{ $VAR_MAIN_ACTION_READ if $VAR_MAIN_ACTION_READ is defined else '_undefined_' }}"
 ${CMT}  when: action == "read"
 ${CMT}
 ${CMT}- name: calling task - ${ROLE}_update.yml
 ${CMT}  import_tasks: ${ROLE}_update.yml
 ${CMT}  vars:
-${CMT}    ${ROLE}_update_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_update_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_update_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_update_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}    $VAR_UPDATE: "{{ $VAR_MAIN_ACTION_UPDATE if $VAR_MAIN_ACTION_UPDATE is defined else '_undefined_' }}"
 ${CMT}  when: action == "update"
 ${CMT}
 ${CMT}- name: calling task - ${ROLE}_delete.yml
 ${CMT}  import_tasks: ${ROLE}_delete.yml
 ${CMT}  vars:
-${CMT}    ${ROLE}_delete_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_delete_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_delete_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_delete_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}    $VAR_DELETE: "{{ $VAR_MAIN_ACTION_DELETE if $VAR_MAIN_ACTION_DELETE is defined else '_undefined_' }}"
 ${CMT}  when: action == "delete"
 ${CMT}
 ${CMT}- name: calling directly task - ${ROLE}_create.yml under role - ${ROLE}
 ${CMT}  import_role:
 ${CMT}    name: ${ROLE}
 ${CMT}    tasks_from: ${ROLE}_create
-${CMT}  vars:
-${CMT}    ${ROLE}_create_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_create_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_create_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_create_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}  #vars:
+${CMT}  #  $VAR_CREATE: "{{ $VAR_MAIN_ACTION_ROLE_CREATE if $VAR_MAIN_ACTION_ROLE_CREATE is defined else '_undefined_' }}"
 ${CMT}  when: action == "${ROLE}_create"
 ${CMT}
 ${CMT}- name: calling directly task - ${ROLE}_read.yml under role - ${ROLE}
 ${CMT}  import_role:
 ${CMT}    name: ${ROLE}
 ${CMT}    tasks_from: ${ROLE}_read
-${CMT}  vars:
-${CMT}    ${ROLE}_read_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_read_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_read_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_read_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}  #vars:
+${CMT}  #  $VAR_READ: "{{ $VAR_MAIN_ACTION_ROLE_READ if $VAR_MAIN_ACTION_ROLE_READ is defined else '_undefined_' }}"
 ${CMT}  when: action == "${ROLE}_read"
 ${CMT}
 ${CMT}- name: calling directly task - ${ROLE}_update.yml under role - ${ROLE}
 ${CMT}  import_role:
 ${CMT}    name: ${ROLE}
-${CMT}
 ${CMT}    tasks_from: ${ROLE}_update
-${CMT}  vars:
-${CMT}    ${ROLE}_update_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_update_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_update_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_update_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}  #vars:
+${CMT}  #  $VAR_UPDATE: "{{ $VAR_MAIN_ACTION_ROLE_UPDATE if $VAR_MAIN_ACTION_ROLE_UPDATE is defined else '_undefined_' }}"
 ${CMT}  when: action == "${ROLE}_update"
 ${CMT}
 ${CMT}- name: calling directly task - ${ROLE}_delete.yml under role - ${ROLE}
 ${CMT}  import_role:
 ${CMT}    name: ${ROLE}
 ${CMT}    tasks_from: ${ROLE}_delete
-${CMT}  vars:
-${CMT}    ${ROLE}_delete_var_0: "${SPECIFICATION} 0"
-${CMT}    ${ROLE}_delete_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT}    ${ROLE}_delete_vars_0: 
-${CMT}      - ${SPECIFICATION} 0
-${CMT}      - ${SPECIFICATION} 1
-${CMT}      - ${SPECIFICATION} 2
-${CMT}    ${ROLE}_delete_vars_1: 
-${CMT}      - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT}      - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT}  #vars:
+${CMT}  #  $VAR_DELETE: "{{ $VAR_MAIN_ACTION_ROLE_DELETE if $VAR_MAIN_ACTION_ROLE_DELETE is defined else '_undefined_' }}"
 ${CMT}  when: action == "${ROLE}_delete"
 
 # references:
@@ -291,10 +182,7 @@ cat <<EOF > $TASKS_FILE_CREATE
 ---
 ${CMT}- name: debug for ${ROLE}_${PURPOSE}
 ${CMT}  debug: {msg: task - ${ROLE}_${PURPOSE} }
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_var_0}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_var_1}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_vars_0}
-${CMT}- debug: {var: ${ROLE}_${PURPOSE}_vars_1}
+${CMT}- debug: {var: $VAR_CREATE}
 
 EOF
 
@@ -316,29 +204,31 @@ SPECIFICATION="template"
 cat <<EOF > $TEMPLATE_FILE
 #jinja2: lstrip_blocks: True, trim_blocks: True
 
-{# if a variable is defined and not empty #}
-{% if	${ROLE}_main_var_0 is defined and
-	${ROLE}_main_var_0 | length > 0
-%}
-${ROLE}_main_var_0: {{ ${ROLE}_main_var_0 }}
-{% endif %}
-
-{# handling loop for dictionary #}
-{% for key, value in ${ROLE}_main_var_1.iteritems() %} 
-${ROLE}_main_var_1.{{key}}: {{value}}
-{% endfor %}
-
-{# handling loop for array #}
-{% for item in ${ROLE}_main_vars_0 %}
-${ROLE}_main_vars_0.{{loop.index0}}: {{ item }}
-{% endfor %}
-
-{# handling loop for array #}
-{% for dict in ${ROLE}_main_vars_1 %}
-{% 	for key, value in dict.iteritems() %} 
-${ROLE}_main_vars_1.{{key}}: {{value}}
-{% 	endfor %}
-{% endfor %}
+# example:
+#
+#{# if a variable is defined and not empty #}
+#{% if	$VAR_MAIN is defined and
+#	$VAR_MAIN | length > 0
+#%}
+#$VAR_MAIN: {{ $VAR_MAIN }}
+#{% endif %}
+#
+#{# handling loop for dictionary #}
+#{% for key, value in $VAR_MAIN.iteritems() %} 
+#$VAR_MAIN.{{key}}: {{value}}
+#{% endfor %}
+#
+#{# handling loop for array #}
+#{% for item in $VAR_MAIN %}
+#$VAR_MAIN.{{loop.index0}}: {{ item }}
+#{% endfor %}
+#
+#{# handling loop for dictionalry within array #}
+#{% for dict in $VAR_MAIN %}
+#{% 	for key, value in dict.iteritems() %} 
+#$VAR_MAIN.{{key}}: {{value}}
+#{% 	endfor %}
+#{% endfor %}
 
 # references:
 # http://jinja.pocoo.org/docs/2.10/templates/#for
@@ -355,9 +245,13 @@ ${CMT}    - localhost
 ${CMT}    #- otherhost
 ${CMT}  roles:
 ${CMT}    - {role: ${ROLE}, action: create}
-${CMT}    - {role: ${ROLE}, action: read}
-${CMT}    - {role: ${ROLE}, action: update}
-${CMT}    - {role: ${ROLE}, action: delete}
+${CMT}    #- {role: ${ROLE}, action: read}
+${CMT}    #- {role: ${ROLE}, action: update}
+${CMT}    #- {role: ${ROLE}, action: delete}
+${CMT}    #- {role: ${ROLE}, action: ${ROLE}_create}
+${CMT}    #- {role: ${ROLE}, action: ${ROLE}_read}
+${CMT}    #- {role: ${ROLE}, action: ${ROLE}_update}
+${CMT}    #- {role: ${ROLE}, action: ${ROLE}_delete}
 ${CMT}  vars_files:
 ${CMT}    - $VARSFILE_TEMPLATE_FILE_MAIN
 ${CMT}    - $VARSFILE_TEMPLATE_FILE_CREATE
@@ -368,118 +262,86 @@ ${CMT}  #vars:
 EOF
 
 ##### defaults/main.yml
-PURPOSE="default"
-SPECIFICATION="from ${ROLE} defaults"
 cat <<EOF > $DEFAULTS_FILE
 ---
 EOF
 
 ##### vars/main.yml
-PURPOSE="default"
-SPECIFICATION="from ${ROLE} vars"
 cat <<EOF > $VARS_FILE
 ---
 EOF
 
 ##### template varsfiles (main)
-PURPOSE="varsfiles"
-SPECIFICATION="varsfiles"
+SPECIFICATION="value from playbook varsfiles - main"
 cat <<EOF > $VARSFILE_TEMPLATE_FILE_MAIN
 ---
 ### ${ROLE}_main_variables
-${CMT2}${ROLE}_main_var_0: "${SPECIFICATION} 0"
-${CMT2}${ROLE}_main_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT2}${ROLE}_main_vars_0: 
-${CMT2}  - ${SPECIFICATION} 0
-${CMT2}  - ${SPECIFICATION} 1
-${CMT2}  - ${SPECIFICATION} 2
-${CMT2}${ROLE}_main_vars_1: 
-${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT2}$VAR_MAIN: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_CREATE: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_READ: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_UPDATE: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_DELETE: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_ROLE_CREATE: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_ROLE_READ: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_ROLE_UPDATE: "${SPECIFICATION}"
+${CMT2}$VAR_MAIN_ACTION_ROLE_DELETE: "${SPECIFICATION}"
 EOF
 tail -n +2 $VARSFILE_TEMPLATE_FILE_MAIN >> $DEFAULTS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_MAIN >> $VARS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_MAIN >> $PLAYBOOK_TEMPLATE_FILE
+sed -i -e "s/^${CMT2}/${CMT}/" $VARSFILE_TEMPLATE_FILE_MAIN
 
 
 ##### template varsfiles (create)
-PURPOSE="varsfiles"
-SPECIFICATION="varsfiles"
+SPECIFICATION="value from playbook varsfiles - create"
 cat <<EOF > $VARSFILE_TEMPLATE_FILE_CREATE
 ---
 ### ${ROLE}_create_variables
-${CMT2}${ROLE}_create_var_0: "${SPECIFICATION} 0"
-${CMT2}${ROLE}_create_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT2}${ROLE}_create_vars_0: 
-${CMT2}  - ${SPECIFICATION} 0
-${CMT2}  - ${SPECIFICATION} 1
-${CMT2}  - ${SPECIFICATION} 2
-${CMT2}${ROLE}_create_vars_1: 
-${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT2}$VAR_CREATE: "${SPECIFICATION}"
 EOF
 tail -n +2 $VARSFILE_TEMPLATE_FILE_CREATE >> $DEFAULTS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_CREATE >> $VARS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_CREATE >> $PLAYBOOK_TEMPLATE_FILE
+sed -i -e "s/^${CMT2}/${CMT}/" $VARSFILE_TEMPLATE_FILE_CREATE
 
 ##### template varsfiles (read)
-PURPOSE="varsfiles"
-SPECIFICATION="varsfiles"
+SPECIFICATION="value from playbook varsfiles - read"
 cat <<EOF > $VARSFILE_TEMPLATE_FILE_READ
 ---
 ### ${ROLE}_read_variables
-${CMT2}${ROLE}_read_var_0: "${SPECIFICATION} 0"
-${CMT2}${ROLE}_read_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT2}${ROLE}_read_vars_0: 
-${CMT2}  - ${SPECIFICATION} 0
-${CMT2}  - ${SPECIFICATION} 1
-${CMT2}  - ${SPECIFICATION} 2
-${CMT2}${ROLE}_read_vars_1: 
-${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT2}$VAR_READ: "${SPECIFICATION}"
 EOF
 tail -n +2 $VARSFILE_TEMPLATE_FILE_READ >> $DEFAULTS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_READ >> $VARS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_READ >> $PLAYBOOK_TEMPLATE_FILE
+sed -i -e "s/^${CMT2}/${CMT}/" $VARSFILE_TEMPLATE_FILE_READ
 
 ##### template varsfiles (update)
-PURPOSE="varsfiles"
-SPECIFICATION="varsfiles"
+SPECIFICATION="value from playbook varsfiles - update"
 cat <<EOF > $VARSFILE_TEMPLATE_FILE_UPDATE
 ---
 ### ${ROLE}_update_variables
-${CMT2}${ROLE}_update_var_0: "${SPECIFICATION} 0"
-${CMT2}${ROLE}_update_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT2}${ROLE}_update_vars_0: 
-${CMT2}  - ${SPECIFICATION} 0
-${CMT2}  - ${SPECIFICATION} 1
-${CMT2}  - ${SPECIFICATION} 2
-${CMT2}${ROLE}_update_vars_1: 
-${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT2}$VAR_UPDATE: "${SPECIFICATION}"
 EOF
 tail -n +2 $VARSFILE_TEMPLATE_FILE_UPDATE >> $DEFAULTS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_UPDATE >> $VARS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_UPDATE >> $PLAYBOOK_TEMPLATE_FILE
+sed -i -e "s/^${CMT2}/${CMT}/" $VARSFILE_TEMPLATE_FILE_UPDATE
 
 ##### template varsfiles (delete)
-PURPOSE="varsfiles"
-SPECIFICATION="varsfiles"
+SPECIFICATION="value from playbook varsfiles - delete"
 cat <<EOF > $VARSFILE_TEMPLATE_FILE_DELETE
 ---
 ### ${ROLE}_delete_variables
-${CMT2}${ROLE}_delete_var_0: "${SPECIFICATION} 0"
-${CMT2}${ROLE}_delete_var_1: {msg1: ${SPECIFICATION} 0, msg2: ${SPECIFICATION} 1}
-${CMT2}${ROLE}_delete_vars_0: 
-${CMT2}  - ${SPECIFICATION} 0
-${CMT2}  - ${SPECIFICATION} 1
-${CMT2}  - ${SPECIFICATION} 2
-${CMT2}${ROLE}_delete_vars_1: 
-${CMT2}  - {key0: ${SPECIFICATION} 0, key1: ${SPECIFICATION} 01}
-${CMT2}  - {key0: ${SPECIFICATION} 1, key1: ${SPECIFICATION} 11}
+${CMT2}$VAR_DELETE: "${SPECIFICATION}"
 EOF
 tail -n +2 $VARSFILE_TEMPLATE_FILE_DELETE >> $DEFAULTS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_DELETE >> $VARS_FILE
 tail -n +2 $VARSFILE_TEMPLATE_FILE_DELETE >> $PLAYBOOK_TEMPLATE_FILE
+sed -i -e "s/^${CMT2}/${CMT}/" $VARSFILE_TEMPLATE_FILE_DELETE
 
-#cp $PLAYBOOK_TEMPLATE_FILE
+#
+sed -i -e "s/from playbook varsfiles/from task defaults/g" $DEFAULTS_FILE
+sed -i -e "s/from playbook varsfiles/from task vars/g" $VARS_FILE
+sed -i -e "s/from playbook varsfiles/from playbook vars/g" $PLAYBOOK_TEMPLATE_FILE
+
