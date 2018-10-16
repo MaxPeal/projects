@@ -1,0 +1,3 @@
+apple,aapl
+amazon,amzn
+intel,intc
