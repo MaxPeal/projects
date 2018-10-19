@@ -1,0 +1,34 @@
+---
+- name: debugging variables for task docker_create	
+  debug:
+    var: var_task_docker_create
+
+- name: preparing up the repository
+  command: apt-get update
+  become: yes
+  
+- name: preparing up the repository 2
+  command: apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+  become: yes
+
+- name: preparing up the repository 3
+  shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  become: yes
+
+- name: preparing up the repository 4
+  shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  become: yes
+
+- name: installing docker ce
+  apt:
+    name: docker-ce
+    update_cache: yes
+  become: yes
+
+- name: testing docker installation (hello world)
+  command: docker run hello-world
+  register: docker_run_helloworld_output
+  become: yes
+- debug:
+    var: docker_run_helloworld_output
+

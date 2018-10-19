@@ -1,2 +1,81 @@
 ---
-# tasks file for docker
+- name: debugging variables for task docker_main	
+  debug:
+    var: var_task_docker_main
+
+- name: calling task docker_create
+  import_tasks: docker_create.yml
+  vars:
+    var_task_docker_create: "{{ var_task_docker_create_main }}"
+  when: task_action == "create"
+
+#var_task_docker_main: null
+#var_task_docker_main_main: null
+#- name: calling task docker_main
+#  import_tasks: docker_main.yml
+#  vars:
+#    var_task_docker_main: "{{ var_task_docker_main_main if var_task_docker_main_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_docker_main_action == "main"
+
+#- name: calling task docker_main directly
+#  import_role:
+#    name: docker
+#    tasks_from: docker_main.yml
+#  when: var_task_docker_main_action == "docker_main"
+
+#var_task_docker_create: null
+#var_task_docker_create_main: null
+#- name: calling task docker_create
+#  import_tasks: docker_create.yml
+#  vars:
+#    var_task_docker_create: "{{ var_task_docker_create_main if var_task_docker_create_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_docker_main_action == "create"
+
+#- name: calling task docker_create directly
+#  import_role:
+#    name: docker
+#    tasks_from: docker_create.yml
+#  when: var_task_docker_main_action == "docker_create"
+
+#var_task_docker_read: null
+#var_task_docker_read_main: null
+#- name: calling task docker_read
+#  import_tasks: docker_read.yml
+#  vars:
+#    var_task_docker_read: "{{ var_task_docker_read_main if var_task_docker_read_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_docker_main_action == "read"
+
+#- name: calling task docker_read directly
+#  import_role:
+#    name: docker
+#    tasks_from: docker_read.yml
+#  when: var_task_docker_main_action == "docker_read"
+
+#var_task_docker_update: null
+#var_task_docker_update_main: null
+#- name: calling task docker_update
+#  import_tasks: docker_update.yml
+#  vars:
+#    var_task_docker_update: "{{ var_task_docker_update_main if var_task_docker_update_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_docker_main_action == "update"
+
+#- name: calling task docker_update directly
+#  import_role:
+#    name: docker
+#    tasks_from: docker_update.yml
+#  when: var_task_docker_main_action == "docker_update"
+
+#var_task_docker_delete: null
+#var_task_docker_delete_main: null
+#- name: calling task docker_delete
+#  import_tasks: docker_delete.yml
+#  vars:
+#    var_task_docker_delete: "{{ var_task_docker_delete_main if var_task_docker_delete_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_docker_main_action == "delete"
+
+#- name: calling task docker_delete directly
+#  import_role:
+#    name: docker
+#    tasks_from: docker_delete.yml
+#  when: var_task_docker_main_action == "docker_delete"
+

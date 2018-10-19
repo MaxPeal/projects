@@ -1,5 +1,5 @@
 ---
-- name: debug for test_update
-  debug: {msg: task - test_update }
-- debug: {var: test_update_var}
+- name: debugging variables for task test_update	
+  debug:
+    var: var_task_test_update
 

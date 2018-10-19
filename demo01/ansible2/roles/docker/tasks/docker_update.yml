@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task docker_update	
+  debug:
+    var: var_task_docker_update
+

@@ -1,0 +1,29 @@
+
+
+- name: printing command output
+  debug:
+    var: example_command_output
+  when: example_module == "command"
+
+- name: calling apt module
+  apt:
+    name: "{{ example_apt_package }}"
+    state: present
+  when: example_module == "apt_with_package"
+
+- name: calling apt module (for multiple packages)
+  apt:
+    name: "{{ example_apt_packages }}"
+    state: present
+  vars:
+    example_apt_packages:
+      - "{{ example_apt_package_1 }}={{ example_apt_package_ver_1 }}"
+      - "{{ example_apt_package_2 }}={{ example_apt_package_ver_2 }}"
+  when: example_module == "apt_with_packages"
+# reference: https://docs.ansible.com/ansible/latest/modules/apt_module
+
+- name: calling command module
+  command: "{{ example_command_line }}"
+  register: example_command_output
+  when: example_module == "command"
+# reference: https://docs.ansible.com/ansible/latest/modules/command_module.html

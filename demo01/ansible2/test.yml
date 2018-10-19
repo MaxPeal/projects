@@ -3,14 +3,15 @@
 #- hosts: physical
 - hosts: 
     - phy02
-    - phy03
+    #- phy03
   roles:
     - { role: group, group_task_action: group_add }
     - { role: user, user_task_action: user_add }
     - { role: kvm, kvm_task_action: kvm_add }
-    - { role: nw }
+    #- { role: nw }
     - { role: ipmitool, ipmitool_task_action: ipmitool_add }
     - { role: sshd, sshd_task_action: sshd_config_update }
+    - { role: docker, task_action: create }
     
   vars_files:
     - test_vars.yml
@@ -18,7 +19,8 @@
     - nw_if_baremetal_compute.yml
 
 - hosts: 
-    - phy01
+    #- phy01
+    - none
   roles:
     - { role: group, group_task_action: group_add }
     - { role: user, user_task_action: user_add }

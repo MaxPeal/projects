@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task docker_delete	
+  debug:
+    var: var_task_docker_delete
+
