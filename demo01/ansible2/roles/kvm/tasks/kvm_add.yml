@@ -32,11 +32,11 @@
 - name: creating kvm user
   include_role:
     name: user
+    tasks_from: user_added
   vars:
-    user_groups:
+    user_added_groups:
       "{{ kvm_groups }}"
-    user_task_action: user_add
-    user_users:
+    user_added_users:
       - name: kvm
         nopasswd: no 
         ssh_key: yes

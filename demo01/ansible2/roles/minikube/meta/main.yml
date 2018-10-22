@@ -1,0 +1,3 @@
+---
+dependencies:
+- { role: virtualbox, task_state: added }

@@ -25,10 +25,28 @@
     update_cache: yes
   become: yes
 
-- name: testing docker installation (hello world)
-  command: docker run hello-world
-  register: docker_run_helloworld_output
-  become: yes
-- debug:
+- name: creating docker user and group
+  import_role:
+    name: user
+    tasks_from: user_added.yml
+  vars:
+    user_added_groups: [ docker ]
+    user_added_users:
+      - { name: docker, nopasswd: yes, groups: "{{ user_added_groups }}", ssh_key: yes }
+      #- { name: docker, nopasswd: yes, groups: "{{ user_added_groups }}", primary_group: docker, ssh_key: yes }
+
+#- name: testing docker installation (hello world)
+#  command: docker run hello-world
+#  register: docker_run_helloworld_output
+#  become_user: docker
+#  become: yes
+#- debug:
     var: docker_run_helloworld_output
+
+
+- name: installing docker machine
+  shell: base=https://github.com/docker/machine/releases/download/v0.14.0 && curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/usr/local/bin/docker-machine && chmod +x /usr/local/bin/docker-machine
+  become: yes
+#TODO: make this task an optional later
+
 

@@ -1,0 +1,36 @@
+---
+- name: debugging variables for task virtualbox_added	
+  debug:
+    var: var_task_virtualbox_added
+
+#- name: installing virtualbox
+#  shell: echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib" >> /etc/apt/sources.list.d/virtualbox.list
+#  become: yes
+
+#- name: preparing up the repository 
+#  shell: add-apt-repository "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
+#  become: yes
+#
+#- name: setting up the keyring
+#  shell: wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+#  become: yes
+#
+#- name: setting up the keyring (2)
+#  shell: wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+#  become: yes
+
+- name: installing virtualbox
+  apt:
+    name: "{{ _packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    _packages:
+      #- virtualbox-5.2
+      - virtualbox
+      - virtualbox-ext-pack
+      # virtualbox gui
+      - virtualbox-qt
+  become: yes
+ 
+

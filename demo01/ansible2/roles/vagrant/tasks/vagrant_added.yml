@@ -1,0 +1,12 @@
+---
+- name: debugging variables for task vagrant_added	
+  debug:
+    var: var_task_vagrant_added
+
+- name: downloading vagrant package (for ubuntu)
+  command: wget https://releases.hashicorp.com/vagrant/2.1.4/vagrant_2.1.4_x86_64.deb
+
+- name: installing vagrant
+  command: sudo dpkg -i vagrant_2.1.4_x86_64.deb
+
+

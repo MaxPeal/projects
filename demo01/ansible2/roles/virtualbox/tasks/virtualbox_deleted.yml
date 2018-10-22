@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task virtualbox_deleted	
+  debug:
+    var: var_task_virtualbox_deleted
+

@@ -1,0 +1,30 @@
+---
+- name: debugging variables for task minikube_added	
+  debug:
+    var: var_task_minikube_added
+
+
+- name: installing kubectl apt repo (1)
+  shell: apt-get update && apt-get install -y apt-transport-https
+  become: yes
+
+- name: installing kubectl apt repo (2)
+  shell: curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  become: yes
+  
+- name: installing kubectl apt repo (3)
+  shell: add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-$(lsb_release -cs) main"
+  become: yes 
+
+- name: installing kubectl
+  apt:
+    name: "{{ _packages }}"
+    update_cache: yes
+  vars:
+    _packages: 
+      - kubectl
+  become: yes
+
+- name: installing minikube
+  shell: curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.30.0/minikube-linux-amd64 && chmod +x minikube && cp minikube /usr/local/bin/ && rm minikube
+  become: yes

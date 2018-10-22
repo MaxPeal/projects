@@ -4,14 +4,13 @@
 - name: adding user
   user:
     name: "{{ item.name }}"
-    #groups: sudo
-    #password: "{{ item.password }}"
-    password: "{{ user_default_password }}"
+    password: "{{ user_added_default_password }}"
     append: yes
     generate_ssh_key: "{{ item.ssh_key }}"
+    group: "{{ item.name if item.primary_group is undefined else item.primary_group }}"
   become: yes
   with_items:
-    "{{ user_users }}"
+    "{{ user_added_users }}"
 
 - name: setting sudo no password to the user
   lineinfile:
@@ -21,27 +20,27 @@
   when: item.nopasswd == true
   become: yes
   with_items:
-    "{{ user_users }}"
+    "{{ user_added_users }}"
 
 - name: adding groups
   import_role: 
     name: group
     tasks_from: group_add
   vars:
-    group_groups: "{{ user_groups }}"
+    group_groups: "{{ user_added_groups }}"
     #group_task_action: group_add
-  when: (user_groups is defined) and (user_groups|length >0)
+  when: (user_added_groups is defined) and (user_added_groups|length >0)
 
 - name: adding users to the designated group(s)
   user:
-    #name: "{{ ansible_user_id }}"
+    #name: "{{ ansible_user_added_id }}"
     name: "{{ item.0.name }}"
     groups: "{{ item.1 }}"
     append: yes
   become: yes
   #notify: resetting ssh connection
   with_subelements:
-    - "{{ user_users }}"
+    - "{{ user_added_users }}"
     - groups
 
 # reset ssh connection to allow user changes to affect 'current login user'

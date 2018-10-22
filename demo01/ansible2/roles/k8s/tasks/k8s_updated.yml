@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task k8s_updated	
+  debug:
+    var: var_task_k8s_updated
+

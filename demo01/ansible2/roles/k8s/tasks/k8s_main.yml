@@ -1,0 +1,75 @@
+---
+- name: debugging variables for task k8s_main	
+  debug:
+    var: var_task_k8s_main
+
+#var_task_k8s_main: null
+#var_task_k8s_main_main: null
+#- name: calling task k8s_main
+#  import_tasks: k8s_main.yml
+#  vars:
+#    var_task_k8s_main: "{{ var_task_k8s_main_main if var_task_k8s_main_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_k8s_main_action == "main"
+
+#- name: calling task k8s_main directly
+#  import_role:
+#    name: k8s
+#    tasks_from: k8s_main.yml
+#  when: var_task_k8s_main_action == "k8s_main"
+
+#var_task_k8s_added: null
+#var_task_k8s_added_main: null
+#- name: calling task k8s_added
+#  import_tasks: k8s_added.yml
+#  vars:
+#    var_task_k8s_added: "{{ var_task_k8s_added_main if var_task_k8s_added_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_k8s_main_action == "added"
+
+#- name: calling task k8s_added directly
+#  import_role:
+#    name: k8s
+#    tasks_from: k8s_added.yml
+#  when: var_task_k8s_main_action == "k8s_added"
+
+#var_task_k8s_read: null
+#var_task_k8s_read_main: null
+#- name: calling task k8s_read
+#  import_tasks: k8s_read.yml
+#  vars:
+#    var_task_k8s_read: "{{ var_task_k8s_read_main if var_task_k8s_read_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_k8s_main_action == "read"
+
+#- name: calling task k8s_read directly
+#  import_role:
+#    name: k8s
+#    tasks_from: k8s_read.yml
+#  when: var_task_k8s_main_action == "k8s_read"
+
+#var_task_k8s_updated: null
+#var_task_k8s_updated_main: null
+#- name: calling task k8s_updated
+#  import_tasks: k8s_updated.yml
+#  vars:
+#    var_task_k8s_updated: "{{ var_task_k8s_updated_main if var_task_k8s_updated_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_k8s_main_action == "updated"
+
+#- name: calling task k8s_updated directly
+#  import_role:
+#    name: k8s
+#    tasks_from: k8s_updated.yml
+#  when: var_task_k8s_main_action == "k8s_updated"
+
+#var_task_k8s_deleted: null
+#var_task_k8s_deleted_main: null
+#- name: calling task k8s_deleted
+#  import_tasks: k8s_deleted.yml
+#  vars:
+#    var_task_k8s_deleted: "{{ var_task_k8s_deleted_main if var_task_k8s_deleted_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_k8s_main_action == "deleted"
+
+#- name: calling task k8s_deleted directly
+#  import_role:
+#    name: k8s
+#    tasks_from: k8s_deleted.yml
+#  when: var_task_k8s_main_action == "k8s_deleted"
+

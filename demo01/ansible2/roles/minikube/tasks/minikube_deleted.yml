@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task minikube_deleted	
+  debug:
+    var: var_task_minikube_deleted
+

@@ -7,3 +7,5 @@
 - import_tasks: user_add.yml
   when: user_task_action == "user_add"
 
+- import_tasks: user_added.yml
+  when: task_action == "added"

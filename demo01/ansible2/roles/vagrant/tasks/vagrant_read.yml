@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task vagrant_read	
+  debug:
+    var: var_task_vagrant_read
+

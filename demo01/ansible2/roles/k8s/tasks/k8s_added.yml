@@ -1,0 +1,29 @@
+---
+- name: debugging variables for task k8s_added	
+  debug:
+    var: var_task_k8s_added
+
+- name: installing kubernetes apt repo (1)
+  shell: apt-get update && apt-get install -y apt-transport-https && curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  become: yes
+
+- name: installing kubernetes apt repo (2)
+  shell: add-apt-repository "deb http://apt.kubernetes.io/ kubernetes-$(lsb_release -cs) main"
+  become: yes
+
+- name: update packages list
+  shell: apt-get update
+  become: yes
+
+- name: installing kubernetes
+  apt:
+    name: "{{ _packages }}"
+    update_cache: yes
+  vars:
+    _packages:
+      - kubelet
+      - kubeadm
+      - kubernetes-cni
+  become: yes
+
+

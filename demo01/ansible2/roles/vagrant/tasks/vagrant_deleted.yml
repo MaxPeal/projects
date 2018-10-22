@@ -1,0 +1,5 @@
+---
+- name: debugging variables for task vagrant_deleted	
+  debug:
+    var: var_task_vagrant_deleted
+

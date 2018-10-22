@@ -5,6 +5,7 @@
 #user_default_password: $6$52Q7u45jXt$km6ktHMvas2ZRekf06J9CBtHEIR.J8ExICM1Lx1gqoSgzwD9ZWceXIlZAEJIM85dagtt4DQXGUJ3KmBn78jWr1
 # default password: Super123
 user_default_password: $6$7l/tr/ZFrF0NyyfM$NGSn2er.NnOl0PTCdyFFfFRLj2Wf2dziS1cMNdR8iEn6x3NGpxtORuYJSuhx6vgBBx0qXAOCA2WlDsuKblVNv0
+user_added_default_password: $6$7l/tr/ZFrF0NyyfM$NGSn2er.NnOl0PTCdyFFfFRLj2Wf2dziS1cMNdR8iEn6x3NGpxtORuYJSuhx6vgBBx0qXAOCA2WlDsuKblVNv0
 
 #user_task_action: create
 
