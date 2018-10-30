@@ -5,113 +5,71 @@
 
 #var_task_test_main: null
 #var_task_test_main_main: null
-- name: calling task test_main
-  import_tasks: test_main.yml
-  vars:
-    var_task_test_main: "{{ var_task_test_main_main if var_task_test_main_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "main"
+#- name: calling task test_main
+#  import_tasks: test_main.yml
+#  vars:
+#    var_task_test_main: "{{ var_task_test_main_main if var_task_test_main_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_test_main_action == "main"
 
-- name: calling task test_main directly
-  import_role:
-    name: test
-    tasks_from: test_main.yml
-  when: var_task_test_main_action == "test_main"
+#- name: calling task test_main directly
+#  import_role:
+#    name: test
+#    tasks_from: test_main.yml
+#  when: var_task_test_main_action == "test_main"
 
-#var_task_test_create: null
-#var_task_test_create_main: null
-- name: calling task test_create
-  import_tasks: test_create.yml
-  vars:
-    var_task_test_create: "{{ var_task_test_create_main if var_task_test_create_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "create"
+#var_task_test_added: null
+#var_task_test_added_main: null
+#- name: calling task test_added
+#  import_tasks: test_added.yml
+#  vars:
+#    var_task_test_added: "{{ var_task_test_added_main if var_task_test_added_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_test_main_action == "added"
 
-- name: calling task test_create directly
-  import_role:
-    name: test
-    tasks_from: test_create.yml
-  when: var_task_test_main_action == "test_create"
+#- name: calling task test_added directly
+#  import_role:
+#    name: test
+#    tasks_from: test_added.yml
+#  when: var_task_test_main_action == "test_added"
 
 #var_task_test_read: null
 #var_task_test_read_main: null
-- name: calling task test_read
-  import_tasks: test_read.yml
-  vars:
-    var_task_test_read: "{{ var_task_test_read_main if var_task_test_read_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "read"
+#- name: calling task test_read
+#  import_tasks: test_read.yml
+#  vars:
+#    var_task_test_read: "{{ var_task_test_read_main if var_task_test_read_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_test_main_action == "read"
 
-- name: calling task test_read directly
-  import_role:
-    name: test
-    tasks_from: test_read.yml
-  when: var_task_test_main_action == "test_read"
+#- name: calling task test_read directly
+#  import_role:
+#    name: test
+#    tasks_from: test_read.yml
+#  when: var_task_test_main_action == "test_read"
 
-#var_task_test_update: null
-#var_task_test_update_main: null
-- name: calling task test_update
-  import_tasks: test_update.yml
-  vars:
-    var_task_test_update: "{{ var_task_test_update_main if var_task_test_update_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "update"
+#var_task_test_updated: null
+#var_task_test_updated_main: null
+#- name: calling task test_updated
+#  import_tasks: test_updated.yml
+#  vars:
+#    var_task_test_updated: "{{ var_task_test_updated_main if var_task_test_updated_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_test_main_action == "updated"
 
-- name: calling task test_update directly
-  import_role:
-    name: test
-    tasks_from: test_update.yml
-  when: var_task_test_main_action == "test_update"
+#- name: calling task test_updated directly
+#  import_role:
+#    name: test
+#    tasks_from: test_updated.yml
+#  when: var_task_test_main_action == "test_updated"
 
-#var_task_test_delete: null
-#var_task_test_delete_main: null
-- name: calling task test_delete
-  import_tasks: test_delete.yml
-  vars:
-    var_task_test_delete: "{{ var_task_test_delete_main if var_task_test_delete_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "delete"
+#var_task_test_deleted: null
+#var_task_test_deleted_main: null
+#- name: calling task test_deleted
+#  import_tasks: test_deleted.yml
+#  vars:
+#    var_task_test_deleted: "{{ var_task_test_deleted_main if var_task_test_deleted_main is defined else '_NOT_ASSIGNED_' }}"
+#  when: var_task_test_main_action == "deleted"
 
-- name: calling task test_delete directly
-  import_role:
-    name: test
-    tasks_from: test_delete.yml
-  when: var_task_test_main_action == "test_delete"
-
-#var_task_test_start: null
-#var_task_test_start_main: null
-- name: calling task test_start
-  import_tasks: test_start.yml
-  vars:
-    var_task_test_start: "{{ var_task_test_start_main if var_task_test_start_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "start"
-
-- name: calling task test_start directly
-  import_role:
-    name: test
-    tasks_from: test_start.yml
-  when: var_task_test_main_action == "test_start"
-
-#var_task_test_restart: null
-#var_task_test_restart_main: null
-- name: calling task test_restart
-  import_tasks: test_restart.yml
-  vars:
-    var_task_test_restart: "{{ var_task_test_restart_main if var_task_test_restart_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "restart"
-
-- name: calling task test_restart directly
-  import_role:
-    name: test
-    tasks_from: test_restart.yml
-  when: var_task_test_main_action == "test_restart"
-
-#var_task_test_stop: null
-#var_task_test_stop_main: null
-- name: calling task test_stop
-  import_tasks: test_stop.yml
-  vars:
-    var_task_test_stop: "{{ var_task_test_stop_main if var_task_test_stop_main is defined else '_NOT_ASSIGNED_' }}"
-  when: var_task_test_main_action == "stop"
-
-- name: calling task test_stop directly
-  import_role:
-    name: test
-    tasks_from: test_stop.yml
-  when: var_task_test_main_action == "test_stop"
+#- name: calling task test_deleted directly
+#  import_role:
+#    name: test
+#    tasks_from: test_deleted.yml
+#  when: var_task_test_main_action == "test_deleted"
 

@@ -1,17 +1,11 @@
 ---
 #var_task_test_main: null
 #var_task_test_main_main: null
-#var_task_test_create: null
-#var_task_test_create_main: null
+#var_task_test_added: null
+#var_task_test_added_main: null
 #var_task_test_read: null
 #var_task_test_read_main: null
-#var_task_test_update: null
-#var_task_test_update_main: null
-#var_task_test_delete: null
-#var_task_test_delete_main: null
-#var_task_test_start: null
-#var_task_test_start_main: null
-#var_task_test_restart: null
-#var_task_test_restart_main: null
-#var_task_test_stop: null
-#var_task_test_stop_main: null
+#var_task_test_updated: null
+#var_task_test_updated_main: null
+#var_task_test_deleted: null
+#var_task_test_deleted_main: null

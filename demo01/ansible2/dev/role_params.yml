@@ -1,0 +1,28 @@
+project:
+  name: project1
+  inventories:
+    - {hostname: host1, ip: 192.168.100.101, ansible_user: ubuntu, interpreter: python3}
+    - {hostname: host2, ip: 192.168.100.102, ansible_user: ubuntu, interpreter: python3}
+  roles:
+    - role: test1
+      tasks:
+        - {state: added}
+        - {state: read}
+        - {state: updated}
+        - state: deleted
+          #import_tasks:
+          #  name: another_task.yml
+          #  vars:
+          #    - var_another_task: null
+          import_role:
+            name: another_role
+            tasks_from: another_role_task
+            vars:
+              - var_another_role_task: null
+          variables:
+            - {prefix: var_, postfix: _var, optional: yes, default_value: null}
+          dependencies: [{role: test2, state: deleted}, {role: test3, state: added}]}
+          readme: yes
+          playbooks: yes
+      
+

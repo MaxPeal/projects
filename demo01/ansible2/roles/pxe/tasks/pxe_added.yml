@@ -1,0 +1,6 @@
+---
+- name: debugging variables for task pxe_added	
+  debug:
+    var: var_task_pxe_added
+
+- name: 

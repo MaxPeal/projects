@@ -1,0 +1,7 @@
+---
+# examples
+#dependencies:
+#  - { role: test, task_state: added }
+#  - { role: test, task_state: read }
+#  - { role: test, task_state: updated }
+#  - { role: test, task_state: deleted }

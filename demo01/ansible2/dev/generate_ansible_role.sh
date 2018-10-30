@@ -25,13 +25,50 @@ declare -A FILES
 declare -A VARS
 FILES["default_main"]=${DIRS["defaults"]}/main.yml
 FILES["handler_main"]=${DIRS["handlers"]}/main.yml
+FILES["meta_main"]=${DIRS["meta"]}/main.yml
 FILES["var_main"]=${DIRS["vars"]}/main.yml
 for resrc in "${!FILES[@]}"
 do
 	cat <<-EOF > ${FILES["$resrc"]}
 	---
 	EOF
+	# file: meta/main.yml	
+	if [[ $resrc == "meta_main" ]]; then
+		cat <<-EOF >> ${FILES["$resrc"]}
+		# examples
+		#dependencies:
+		#  - { role: ${ROLE}, task_state: added }
+		#  - { role: ${ROLE}, task_state: read }
+		#  - { role: ${ROLE}, task_state: updated }
+		#  - { role: ${ROLE}, task_state: deleted }
+		EOF
+	fi
 done
+
+# read me file
+cat << EOF > ${DIRS["role"]}/README.md
+Role Name
+=========
+
+Requirements
+------------
+
+Role Variables
+--------------
+
+Dependencies
+------------
+
+Example Playbook
+----------------
+
+License
+-------
+
+Author Information
+------------------
+
+EOF
 
 # specialized task files
 TASKS[0]=main
@@ -131,4 +168,5 @@ for index in ${!TASKS[@]}; do
 done
 
 cp ${FILES["task_main"]} ${DIRS["tasks"]}/main.yml
+cp ${FILES["handler_main"]} ${DIRS["handlers"]}/main.yml
 

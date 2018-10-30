@@ -1,0 +1,7 @@
+---
+# examples
+#dependencies:
+#  - { role: pxe, task_state: added }
+#  - { role: pxe, task_state: read }
+#  - { role: pxe, task_state: updated }
+#  - { role: pxe, task_state: deleted }
