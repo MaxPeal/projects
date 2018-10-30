@@ -1,63 +1,6 @@
 #!/bin/bash
 
-# tftp installation
-sudo apt-get install -y apache2 tftpd-hpa inetutils-inetd
-
-# tftp configuration
-
-TFTP_DEFAULT=/etc/default/tftpd-hpa
-TFTP_BOOT=/var/lib/tftpboot
-sudo sed -i -e '/#>>>>>/,/#<<<<</d' $TFTP_DEFAULT
-cat <<EOF | sudo tee -a $TFTP_DEFAULT
-#>>>>>
-RUN_DAEMON="yes"
-OPTIONS="-l -s $TFTP_BOOT"
-#<<<<<
-EOF
-
-INETD_CONF=/etc/inetd.conf
-# adding 
-sudo sed -i -e '/#>>>>>/,/#<<<<</d' $INETD_CONF
-cat <<EOF | sudo tee -a $INETD_CONF
-#>>>>>
-tftp	dgram	udp	wait	root	/usr/sbin/in.tftpd -s $TFTP_BOOT
-#<<<<<
-EOF
-
-sudo /etc/init.d/tftpd-hpa restart
-
-# downloading iso image
-ISO=ubuntu-16.04.5-server-amd64.iso
-INSTALLER_SRC=http://releases.ubuntu.com/16.04/$ISO
-INSTALLER_DEST=/var/www/ubuntu160405
-if [ ! -f ./$ISO ]; then
-wget http://releases.ubuntu.com/16.04/$ISO
-fi
-
-# mounting iso to mnt
-sudo mount -o loop ./$ISO /mnt
-
-# copy the installation files to pxe server
-cd /mnt
-# kernel and ram disk
-sudo cp -fr install/netboot/* $TFTP_BOOT
-# os image
-sudo mkdir -p $INSTALLER_DEST
-sudo cp -fr /mnt/* $INSTALLER_DEST
-
-
-# modify pxe config file
-INSTALLER_IPADDR=192.168.100.1
-sudo sed -i -e '/#>>>>>/,/#<<<<</d' $TFTP_BOOT/pxelinux.cfg/default
-cat <<EOF | sudo tee -a $TFTP_BOOT/pxelinux.cfg/default
-#>>>>>
-lable linux
-kernel ubuntu-installer/amd64/linux
-append ks=http://$INSTALLER_IPADDR/ks.cfg vga=normal initrd=ubuntu-installer/amd64/initrd.gz
-ramdisk_size=16432 root=/dev/rd/0 rw --
-#<<<<<
-EOF
-
+### dhcp
 # installing dhcp
 sudo apt-get install -y isc-dhcp-server
 
@@ -99,5 +42,65 @@ filename "pxelinux.0";
 EOF
 
 sudo service isc-dhcp-server restart
+
+
+# tftp installation
+sudo apt-get install -y apache2 tftpd-hpa inetutils-inetd
+
+# tftp configuration
+
+TFTP_DEFAULT=/etc/default/tftpd-hpa
+TFTP_BOOT=/var/lib/tftpboot
+sudo sed -i -e '/#>>>>>/,/#<<<<</d' $TFTP_DEFAULT
+cat <<EOF | sudo tee -a $TFTP_DEFAULT
+#>>>>>
+RUN_DAEMON="yes"
+OPTIONS="-l -s $TFTP_BOOT"
+#<<<<<
+EOF
+
+INETD_CONF=/etc/inetd.conf
+# adding 
+sudo sed -i -e '/#>>>>>/,/#<<<<</d' $INETD_CONF
+cat <<EOF | sudo tee -a $INETD_CONF
+#>>>>>
+tftp	dgram	udp	wait	root	/usr/sbin/in.tftpd -s $TFTP_BOOT
+#<<<<<
+EOF
+
+sudo /etc/init.d/tftpd-hpa restart
+
+# downloading iso image
+ISO=ubuntu-16.04.5-server-amd64.iso
+INSTALLER_SRC=http://releases.ubuntu.com/16.04/$ISO
+#INSTALLER_DEST=/var/www/ubuntu160405
+INSTALLER_DEST=/var/www/html
+if [ ! -f ./$ISO ]; then
+wget http://releases.ubuntu.com/16.04/$ISO
+fi
+
+# mounting iso to mnt
+sudo mount -o loop ./$ISO /mnt
+
+# copy the installation files to pxe server
+cd /mnt
+# kernel and ram disk
+sudo cp -fr install/netboot/* $TFTP_BOOT
+# os image
+sudo mkdir -p $INSTALLER_DEST
+sudo cp -fr /mnt/* $INSTALLER_DEST
+
+
+# modify pxe config file
+INSTALLER_IPADDR=192.168.100.1
+sudo sed -i -e '/#>>>>>/,/#<<<<</d' $TFTP_BOOT/pxelinux.cfg/default
+cat <<EOF | sudo tee -a $TFTP_BOOT/pxelinux.cfg/default
+#>>>>>
+lable linux
+kernel ubuntu-installer/amd64/linux
+append ks=http://$INSTALLER_IPADDR/ks.cfg vga=normal initrd=ubuntu-installer/amd64/initrd.gz
+ramdisk_size=16432 root=/dev/rd/0 rw --
+#<<<<<
+EOF
 
 # required: enable nat after this installation
