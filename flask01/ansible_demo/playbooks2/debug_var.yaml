@@ -1,0 +1,14 @@
+---
+  - hosts: all
+    tasks:
+      - name: print host name
+        shell: hostname
+      - name: debug print variable ansible_default_ipv4 
+        debug:
+          #msg: "{{ ansible_default_ipv4 }}"
+          #var: ansible_enp0s8.ipv4, ansible_enp0s8.ipv6
+          var: ansible_enp0s8.ipv4
+          #var: ansible_default_ipv4
+      - name: debug print variable ansible_default_ipv6 
+        debug:
+          var: ansible_enp0s8.ipv6

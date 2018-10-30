@@ -1,0 +1,20 @@
+---
+  - hosts: all
+    tasks:
+      - name: print host name
+        shell: hostname
+      - name: debug print variable(s)  
+        debug:
+          #msg: "{{ item }}"
+          #var: ansible_{{ item }}.ipv4.address
+          var: inventory_hostname
+          var: ansible_hostname
+          var: hostvars
+          #var: inventory_hostname_short
+        #with_items: "{{ ansible_interfaces }}"
+        with_items: 
+          - "{{ ansible_interfaces }}"
+
+# Reference:
+# https://docs.ansible.com/ansible/2.6/plugins/lookup/items.html?highlight=items
+

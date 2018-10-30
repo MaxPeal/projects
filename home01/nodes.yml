@@ -1,0 +1,33 @@
+---
+- hostname: control
+  group: controller
+  interfaces:
+          - mode: internal
+            type: static
+            address: 192.168.100.1
+          - mode: internal
+            type: static
+            address: 192.168.101.1
+
+- hostname: gateway01
+  group: gateway
+  interfaces:
+          - mode: internal
+            type: static
+            address: 192.168.100.254
+          - mode: internal
+            type: static
+            address: 192.168.101.254
+            #- mode: bridged
+            #type: dhcp
+            #default_gateway: dhcp_assigned
+            #bridge_interface: ens0s10
+- hostname: node01
+  group: client
+  interfaces:
+          - mode: internal
+            type: static
+            address: 192.168.100.10
+          - mode: internal
+            type: static
+            address: 192.168.101.10

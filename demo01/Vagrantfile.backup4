@@ -1,0 +1,299 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+ENV["LC_ALL"] = "en_US.UTF-8"
+
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  #config.vm.box = "ubuntu/xenial64"
+	#_DEFAULT_GW_IP = "172.31.0.1"
+	_HOST_EXTERNAL_BRIDGE_INTERFACE = "enp1s0f2"
+	_HOST_INTERNAL_BRIDGE_INTERFACE = "enp1s0f3"
+	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
+	_node = []
+	_index = 2
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "control",
+		"group" => "controller",
+		"interfaces" => [
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.100.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.101.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.102.#{_index}" },
+			{ "network_mode" => "bridged", "type" => "dhcp", "default_gateway" => "dhcp_assigned", "bridge_interface" => _HOST_EXTERNAL_BRIDGE_INTERFACE },
+			{ "network_mode" => "bridged", "type" => "dhcp", "default_gateway" => "dhcp_assigned", "bridge_interface" => _HOST_INTERNAL_BRIDGE_INTERFACE },
+		]
+			
+	}
+	_index = 3
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "nat01",
+		"group" => "gateway",
+		"interfaces" => [
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.100.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.101.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.102.#{_index}" },
+			{ "network_mode" => "bridged", "type" => "dhcp", "default_gateway" => "dhcp_assigned", "bridge_interface" => _HOST_EXTERNAL_BRIDGE_INTERFACE },
+			#{ "network_mode" => "bridged", "type" => "dhcp" },
+			#{ "network_mode" => "bridged", "type" => "dhcp", "default_gateway" => _DEFAULT_GW_IP },
+		]
+			
+	}
+	_index = 4
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "client00",
+		"group" => "client",
+		"interfaces" => [
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.100.#{_index}" },
+			{ "network_mode" => "internal", "type" => "manual" },
+			{ "network_mode" => "internal", "type" => "manual" },
+		]
+			
+	}
+	_index = 5
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "client01",
+		"group" => "client",
+		"interfaces" => [
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.100.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.101.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.102.#{_index}" },
+		]
+			
+	}
+	_index = 6
+	_node[_index] = { 
+		"index" => _index,
+		"hostname" => "client02",
+		"group" => "client",
+		"interfaces" => [
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.100.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.101.#{_index}" },
+			{ "network_mode" => "internal", "type" => "static", "address" => "192.168.102.#{_index}" },
+		]
+			
+	}
+	_node_index_first = _node[2]["index"]
+	_node_index_last = _node[4]["index"]
+
+	_PATH_PRIVATE_KEY="~/.ssh/id_rsa"
+	_PATH_PUBLIC_KEY="~/.ssh/id_rsa.pub"
+
+	(_node_index_first.._node_index_last).each do |i|
+		config.vm.define "#{_node[i]['hostname']}" do |node|
+			node.ssh.insert_key = false
+			node.ssh.private_key_path = [_PATH_PRIVATE_KEY, "~/.vagrant.d/insecure_private_key"]
+			node.vm.provision "file", source: _PATH_PUBLIC_KEY, destination: "~/.ssh/authorized_keys"
+			_GUEST_PRIVATE_KEY="#{_node[i]['hostname']}/id_rsa"
+			_GUEST_PUBLIC_KEY="#{_node[i]['hostname']}/id_rsa.pub"
+			if File.exist?(_GUEST_PRIVATE_KEY)
+				node.vm.provision "file", source: _GUEST_PRIVATE_KEY, destination: "~/.ssh/id_rsa"
+			end
+			if File.exist?(_GUEST_PUBLIC_KEY)
+				node.vm.provision "file", source: _GUEST_PUBLIC_KEY, destination: "~/.ssh/id_rsa.pub"
+			end
+			node.vm.box = "ubuntu/xenial64"
+			node.vm.hostname = "#{_node[i]['hostname']}"
+			_loop_count = 0
+			#_node[i]["ipv4_addr_list"].each do |ipv4_addr|
+			_node[i]["interfaces"].each do |interface|
+				# please refer to virtualbox specific network:
+				# https://www.vagrantup.com/docs/virtualbox/networking.html
+				# https://blogs.oracle.com/scoter/networking-in-virtualbox-v2
+				# setting internal network = true (no dhcp)
+				if interface["network_mode"] == "internal"
+					if interface["type"] == "manual"
+						node.vm.network "private_network", #ip: interface['address'],
+						auto_config: false,
+						virtualbox__intnet: "intnet_#{_loop_count}"
+						#virtualbox__intnet: true
+					elsif interface["type"] == "dhcp"
+						node.vm.network "private_network", type: "dhcp", #ip: "#{ipv4_addr}",
+						virtualbox__intnet: "intnet_#{_loop_count}"
+						#virtualbox__intnet: true
+					else
+						node.vm.network "private_network", ip: interface['address'],
+						virtualbox__intnet: "intnet_#{_loop_count}"
+						#virtualbox__intnet: true
+					end
+				# about bridged network in vagrant:
+				# https://www.vagrantup.com/docs/networking/public_network.html
+				elsif interface["network_mode"] == "bridged"
+					if interface["type"] == "dhcp"
+						if interface["default_gateway"] == "dhcp_assigned"
+							node.vm.network "public_network", bridge: interface["bridge_interface"],
+								use_dhcp_assigned_default_route: true
+#						elsif interface["default_gateway"]
+#							node.vm.network "public_network", bridge: interface["bridge_interface"]
+#							node.vm.provision "shell",
+#								run: "always",
+#								inline: "sudo route add default gw #{interface['default_gateway']}"
+#								#inline: "sudo ip route add default via #{interface['default_gateway']}"
+						else
+							node.vm.network "public_network", bridge: interface["bridge_interface"]
+							
+						end	
+					end
+				end
+				_loop_count = _loop_count + 1
+				
+			end
+			_FW_PORT_HTTP = 8090 + i
+			_FW_PORT_SSH = 2290 + i
+			node.vm.network "forwarded_port", guest: 80, host: _FW_PORT_HTTP, id: "http"
+			node.vm.network "forwarded_port", guest: 22, host: _FW_PORT_SSH, id: "ssh"
+			node.vm.provision "shell", path: "bootstrap_init.sh"
+			node.vm.provision "shell", path: "bootstrap_sshd.sh"
+			node.vm.provision "shell", path: "bootstrap_python.sh"
+			#node.vm.provision "shell", path: "bootstrap_ssh_keygen.sh"
+			if _node[i]["index"] == _node_index_first 
+				node.vm.provision "shell", inline: <<-"SHELL"
+					echo "INFO: the first loop" 
+					if [ -f "#{_FP_HOSTS_TEMP}" ]; then
+						mv "#{_FP_HOSTS_TEMP}" "#{_FP_HOSTS_TEMP}".backup
+					fi
+					echo "#!/bin/bash" > /vagrant/toolbox/run_ssh_copy_ids.sh
+					chmod +x /vagrant/toolbox/run_ssh_copy_ids.sh
+					# create script for updating /etc/hosts
+					cat <<-SCRIPT > /vagrant/toolbox/run_hosts_update.sh
+						cat "#{_FP_HOSTS_TEMP}" | sudo tee -a /etc/hosts	
+					SCRIPT
+					chmod +x /vagrant/toolbox/run_hosts_update.sh
+				SHELL
+			end
+			if _node[i]["hostname"] == "control"
+				node.vm.provision "shell", inline: <<-"SHELL"
+					echo "DEBUG: no specific tasks assigined"
+				SHELL
+			end
+			# update node info
+			node.vm.provision "shell", inline: <<-EOC
+
+			EOC
+			node.vm.provision "shell", inline: <<-SHELL
+				echo "#{_node[i]['interfaces'][0]['address']} #{_node[i]['hostname']}" | tee -a "#{_FP_HOSTS_TEMP}" 
+				echo "sshpass -p 'vagrant' ssh-copy-id -o 'StrictHostKeyChecking no' vagrant@#{_node[i]['hostname']}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
+			SHELL
+		end
+	end
+
+#	_NODE_FIRST = 2
+#	_NODE_LAST = 6
+#	_FP_HOSTS_TEMP = "/vagrant/toolbox/etc_hosts"
+#	(_NODE_FIRST.._NODE_LAST).each do |i|
+#		config.vm.define "node-#{i}" do |node|
+#			node.vm.box = "ubuntu/xenial64"
+#			_IP1 = "192.168.100.#{i}"
+#			_IP2 = "192.168.101.#{i}"
+#			node.vm.network "private_network", ip: _IP1
+#			node.vm.network "private_network", ip: _IP2
+#			_FW_PORT_HTTP = 8000 + i
+#			_FW_PORT_SSH = 2200 + i
+#			node.vm.network "forwarded_port", guest: 80, host: _FW_PORT_HTTP, id: "http"
+#			node.vm.network "forwarded_port", guest: 22, host: _FW_PORT_SSH, id: "ssh"
+#			#set host name
+#			node.vm.provision "shell", inline: <<-SHELL
+#				echo "node-#{i}" | sudo tee /etc/hostname
+#			SHELL
+#			node.vm.provision "shell", path: "bootstrap_init.sh"
+#			node.vm.provision "shell", path: "bootstrap_sshd.sh"
+#			node.vm.provision "shell", path: "bootstrap_python.sh"
+#			#building hosts template as /vagrant/etc_hosts
+#			if i == _NODE_FIRST
+#				node.vm.provision "shell", inline: <<-"SHELL"
+#					if [ -f "#{_FP_HOSTS_TEMP}" ]; then
+#						mv "#{_FP_HOSTS_TEMP}" "#{_FP_HOSTS_TEMP}".backup
+#					fi
+#					# install sshpass
+#					sudo apt-get install -y sshpass > /dev/null 2>&1
+#					# create sshpass password file
+#					echo "vagrant" > ./password.txt
+#					# create ssh key pair (under vagrant account) 
+#					su - vagrant -c 'ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa'
+#					echo "#!/bin/bash" > /vagrant/toolbox/run_ssh_copy_ids.sh
+#					chmod +x /vagrant/toolbox/run_ssh_copy_ids.sh
+#					# create script for updating /etc/hosts
+#					cat <<-SCRIPT > /vagrant/toolbox/run_hosts_update.sh
+#						#cat /vagrant/toolbox/etc_hosts | sudo tee -a /etc/hosts	
+#						cat "#{_FP_HOSTS_TEMP}" | sudo tee -a /etc/hosts	
+#					SCRIPT
+#					chmod +x /vagrant/toolbox/run_hosts_update.sh
+#				SHELL
+#			end
+#			node.vm.provision "shell", inline: <<-"SHELL"
+#				echo "#{_IP1} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+#				echo "#{_IP2} node-#{i}" | tee -a "#{_FP_HOSTS_TEMP}" 
+#				#echo "#{_IP1} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
+#				#echo "#{_IP2} node-#{i}" | tee -a /vagrant/toolbox/etc_hosts
+#				echo 'sshpass -p "vagrant" ssh-copy-id -o "StrictHostKeyChecking no" vagrant@node-#{i}' >> /vagrant/toolbox/run_ssh_copy_ids.sh
+#				#echo "sshpass -f ./password.txt ssh-copy-id vagrant@node-#{i}" >> /vagrant/toolbox/run_ssh_copy_ids.sh
+#			SHELL
+#		end
+#	end
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end
