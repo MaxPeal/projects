@@ -2,22 +2,32 @@
 - hostname: control
   group: controller
   interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.10
+
           - mode: internal
             type: static
-            address: 192.168.100.1
+            address: 192.168.100.10
+            internal_network: network100
           - mode: internal
             type: static
-            address: 192.168.101.1
+            address: 192.168.101.10
+            internal_network: network101
 
 - hostname: gateway01
   group: gateway
   interfaces:
           - mode: internal
-            type: static
+            #type: static
+            type: dhcp
             address: 192.168.100.254
+            internal_network: network100
           - mode: internal
             type: static
             address: 192.168.101.254
+            internal_network: network101
             #- mode: bridged
             #type: dhcp
             #default_gateway: dhcp_assigned
@@ -25,9 +35,54 @@
 - hostname: node01
   group: client
   interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.11
+          - mode: internal
+            #type: static
+            type: dhcp
+            address: 192.168.100.11
+            internal_network: network100
+          - mode: internal
+            #type: static
+            type: dhcp
+            address: 192.168.101.11
+            internal_network: network101
+- hostname: node02
+  group: client
+  interfaces: []
+- hostname: db01
+  group: database
+  interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.101
           - mode: internal
             type: static
-            address: 192.168.100.10
+            #type: dhcp
+            address: 192.168.100.101
+            internal_network: network100
           - mode: internal
             type: static
-            address: 192.168.101.10
+            #type: dhcp
+            address: 192.168.101.101
+            internal_network: network101
+- hostname: app01
+  group: application
+  interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.151
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.100.151
+            internal_network: network100
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.101.151
+            internal_network: network101

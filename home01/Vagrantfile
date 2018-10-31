@@ -20,10 +20,42 @@ Vagrant.configure("2") do |config|
 
   nodes.each do |node|
 	  _hostname = "#{node['hostname']}"
+	  
 	  config.vm.define _hostname do |machine|
 
 		  machine.vm.box = "ubuntu/xenial64"
 		  machine.vm.hostname = _hostname
+		  _loop_count = 0
+		  #if defined?(node["interfaces"])
+		  node["interfaces"].each do |interface|
+			if interface["mode"] == "host_only"
+
+				if interface["type"] == "dhcp"
+					machine.vm.network "private_network",
+						type: "dhcp"
+				elsif interface["type"] == "static"
+					machine.vm.network "private_network",
+						ip: interface["address"]
+				end
+			elsif interface["mode"] == "internal"
+				if interface["type"] == "manual"
+					machine.vm.network "private_network",
+						auto_config: false,
+						virtualbox__intnet: interface["internal_network"]
+				elsif interface["type"] == "dhcp"
+					machine.vm.network "private_network",
+						type: "dhcp",
+						virtualbox__intnet: interface["internal_network"]
+				elsif interface["type"] == "static"
+					machine.vm.network "private_network",
+						ip: interface["address"],
+						virtualbox__intnet: interface["internal_network"]
+				end
+			end
+			_loop_count = _loop_count + 1
+		  end
+		  #end
+
 	  end
   end
   # Disable automatic box update checking. If you disable this, then
