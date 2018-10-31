@@ -14,7 +14,7 @@ sudo apt-get install -y mariadb-server python-mysqldb
 
 # create new root user (root not longer allow login via phpmyadmin...)
 #sudo mysql -uroot -p${PASSWORD} -e "DROP USER IF EXISTS '${DBADMIN}'@'${DBHOST}';"
-sudo mysql -uroot -p${PASSWORD} -e "DROP USER '${DBADMIN}'@'${DBHOST}';"
+sudo mysql -uroot -p${PASSWORD} -e "DROP USER '${DBADMIN}'@'${DBHOST}';" 2> /dev/null
 sudo mysql -uroot -p${PASSWORD} -e "CREATE USER '${DBADMIN}'@'${DBHOST}' IDENTIFIED BY '${PASSWORD}';"
 sudo mysql -uroot -p${PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO '${DBADMIN}'@'${DBHOST}' WITH GRANT OPTION;"
 sudo mysql -uroot -p${PASSWORD} -e "FLUSH PRIVILEGES;"
