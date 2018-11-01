@@ -6,7 +6,6 @@
             #type: dhcp
             type: static
             address: 192.168.56.10
-
           - mode: internal
             type: static
             address: 192.168.100.10
@@ -15,7 +14,6 @@
             type: static
             address: 192.168.101.10
             internal_network: network101
-
 - hostname: gateway01
   group: gateway
   interfaces:
@@ -32,6 +30,12 @@
             type: dhcp
             default_gateway: dhcp_assigned
             bridge_interface: #[ens3, ens4]
+#          - mode: bridged
+#            type: dhcp
+#            #type: static
+#            #type: manual
+#            #default_gateway_address: 192.168.1.1
+#            #bridge_interface: ens0s10
 - hostname: node01
   group: client
   interfaces:
