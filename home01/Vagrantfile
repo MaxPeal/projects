@@ -51,6 +51,19 @@ Vagrant.configure("2") do |config|
 						ip: interface["address"],
 						virtualbox__intnet: interface["internal_network"]
 				end
+#			elsif interface["mode"] == "bridged"
+#				if interface["type"] == "manual"
+#					machine.vm.network "public_network",
+#						bridge: interface["bridge_interface"]
+#				elsif interface["type"] == "dhcp"
+#					machine.vm.network "public_network",
+#						bridge: interface["bridge_interface"],
+#						use_dhcp_assigned_default_route: true
+#				elsif interface["type"] == "static"
+#					machine.vm.network "public_network",
+#						bridge: interface["bridge_interface"],
+#						ip: interface["address"],
+#				end
 			end
 			_loop_count = _loop_count + 1
 		  end
