@@ -22,14 +22,11 @@ Vagrant.configure("2") do |config|
 	  _hostname = "#{node['hostname']}"
 	  
 	  config.vm.define _hostname do |machine|
-
 		  machine.vm.box = "ubuntu/xenial64"
 		  machine.vm.hostname = _hostname
 		  _loop_count = 0
-		  #if defined?(node["interfaces"])
 		  node["interfaces"].each do |interface|
 			if interface["mode"] == "host_only"
-
 				if interface["type"] == "dhcp"
 					machine.vm.network "private_network",
 						type: "dhcp"
@@ -44,18 +41,34 @@ Vagrant.configure("2") do |config|
 						virtualbox__intnet: interface["internal_network"]
 				elsif interface["type"] == "dhcp"
 					machine.vm.network "private_network",
-						type: "dhcp",
+						type: "dhcp"
 						virtualbox__intnet: interface["internal_network"]
 				elsif interface["type"] == "static"
 					machine.vm.network "private_network",
 						ip: interface["address"],
 						virtualbox__intnet: interface["internal_network"]
 				end
+			elsif interface["mode"] == "bridged"
+				if interface["type"] == "manual"
+					machine.vm.network "public_network",
+						auto_config: false,
+						bridge: [ interface['bridge_interfaces'] ]
+				elsif interface["type"] == "dhcp"
+					machine.vm.network "public_network",
+						use_dhcp_assigned_default_route: true,
+						bridge: [ interface['bridge_interfaces'] ]
+				elsif interface["type"] == "static"
+					machine.vm.network "public_network",
+						ip: interface["address"],
+						#bridge: [ "#{interface['bridge_interfaces']}" ]
+						bridge: [ interface['bridge_interfaces'] ]
+					machine.vm.provision "shell",
+						run: "always",
+						inline: "route add default gw #{interface['default_gateway']}"
+				end
 			end
 			_loop_count = _loop_count + 1
 		  end
-		  #end
-
 	  end
   end
   # Disable automatic box update checking. If you disable this, then

@@ -28,10 +28,10 @@
             type: static
             address: 192.168.101.254
             internal_network: network101
-            #- mode: bridged
-            #type: dhcp
-            #default_gateway: dhcp_assigned
-            #bridge_interface: ens0s10
+          - mode: bridged
+            type: dhcp
+            default_gateway: dhcp_assigned
+            bridge_interface: #[ens3, ens4]
 - hostname: node01
   group: client
   interfaces:
