@@ -32,7 +32,8 @@ Vagrant.configure("2") do |config|
 						type: "dhcp"
 				elsif interface["type"] == "static"
 					machine.vm.network "private_network",
-						ip: interface["address"]
+						ip: interface["address"],
+						netmask: interface["netmask"]
 				end
 			elsif interface["mode"] == "internal"
 				if interface["type"] == "manual"
@@ -41,27 +42,28 @@ Vagrant.configure("2") do |config|
 						virtualbox__intnet: interface["internal_network"]
 				elsif interface["type"] == "dhcp"
 					machine.vm.network "private_network",
-						type: "dhcp"
+						type: "dhcp",
 						virtualbox__intnet: interface["internal_network"]
 				elsif interface["type"] == "static"
 					machine.vm.network "private_network",
 						ip: interface["address"],
+						netmask: interface["netmask"],
 						virtualbox__intnet: interface["internal_network"]
 				end
 			elsif interface["mode"] == "bridged"
 				if interface["type"] == "manual"
 					machine.vm.network "public_network",
 						auto_config: false,
-						bridge: [ interface['bridge_interfaces'] ]
+						bridge: interface['bridge_interfaces']
 				elsif interface["type"] == "dhcp"
 					machine.vm.network "public_network",
 						use_dhcp_assigned_default_route: true,
-						bridge: [ interface['bridge_interfaces'] ]
+						bridge: interface['bridge_interfaces']
 				elsif interface["type"] == "static"
 					machine.vm.network "public_network",
 						ip: interface["address"],
-						#bridge: [ "#{interface['bridge_interfaces']}" ]
-						bridge: [ interface['bridge_interfaces'] ]
+						netmask: interface["netmask"],
+						bridge: interface['bridge_interfaces']
 					machine.vm.provision "shell",
 						run: "always",
 						inline: "route add default gw #{interface['default_gateway']}"
