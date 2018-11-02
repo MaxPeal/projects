@@ -1,0 +1,11 @@
+[gw]
+nat01
+
+[dnsmasq]
+dnsmasq01
+
+[maas]
+maas01
+
+[ap]
+ap01
