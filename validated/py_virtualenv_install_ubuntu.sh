@@ -16,8 +16,8 @@ sudo -H pip3 install --upgrade pip
 # to deactivate
 #deactivate
 
-virtualenv -p python3 venv
-. venv/bin/activate
+virtualenv -p python3 ~/venv
+. ~/venv/bin/activate
 
 pip install Flask
 pip install sqlalchemy

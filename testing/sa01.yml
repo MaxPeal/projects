@@ -1,0 +1,22 @@
+---
+# table definition
+tables:
+  - name: users
+    columns:
+      - name: id
+        type: integer
+        primary_key: true
+      - name: name
+        type: string
+      - name: fullname
+        type: string
+  - name: addresses
+    columns:
+      - name: id
+        type: integer
+        primary_key: true
+      - name: user_id
+        foreign_key: users.id
+      - name: email_address
+        type: string
+        nullable: false
