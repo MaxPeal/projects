@@ -1,41 +1,47 @@
 ---
-- hostname: control
+- hostname: control01
   group: controller
   interfaces:
           - mode: host_only
             #type: dhcp
             type: static
             address: 192.168.56.10
+            netmask: 255.255.255.0
           - mode: internal
             type: static
             address: 192.168.100.10
+            netmask: 255.255.255.0
             internal_network: network100
           - mode: internal
             type: static
             address: 192.168.101.10
+            netmask: 255.255.255.0
             internal_network: network101
 - hostname: gateway01
   group: gateway
   interfaces:
           - mode: internal
-            #type: static
-            type: dhcp
+            type: static
+            #type: dhcp
             address: 192.168.100.254
+            netmask: 255.255.255.0
             internal_network: network100
           - mode: internal
             type: static
             address: 192.168.101.254
+            netmask: 255.255.255.0
             internal_network: network101
           - mode: bridged
             type: dhcp
-            default_gateway: dhcp_assigned
-            bridge_interface: #[ens3, ens4]
+            bridge_interfaces: ["enp1s0f2"]
 #          - mode: bridged
 #            type: dhcp
-#            #type: static
 #            #type: manual
-#            #default_gateway_address: 192.168.1.1
-#            #bridge_interface: ens0s10
+#            #type: static
+#            #address: 192.168.101.254
+#            #netmask: 255.255.255.0
+#            #default_gateway: 172.31.0.1
+#            #bridge_interfaces: ["enp1s0f2", "enp1s0f3"]
 - hostname: node01
   group: client
   interfaces:
@@ -43,15 +49,18 @@
             #type: dhcp
             type: static
             address: 192.168.56.11
+            netmask: 255.255.255.0
           - mode: internal
             #type: static
             type: dhcp
             address: 192.168.100.11
+            netmask: 255.255.255.0
             internal_network: network100
           - mode: internal
             #type: static
             type: dhcp
             address: 192.168.101.11
+            netmask: 255.255.255.0
             internal_network: network101
 - hostname: node02
   group: client
@@ -63,15 +72,18 @@
             #type: dhcp
             type: static
             address: 192.168.56.101
+            netmask: 255.255.255.0
           - mode: internal
             type: static
             #type: dhcp
             address: 192.168.100.101
+            netmask: 255.255.255.0
             internal_network: network100
           - mode: internal
             type: static
             #type: dhcp
             address: 192.168.101.101
+            netmask: 255.255.255.0
             internal_network: network101
 - hostname: app01
   group: application
@@ -80,13 +92,16 @@
             #type: dhcp
             type: static
             address: 192.168.56.151
+            netmask: 255.255.255.0
           - mode: internal
             type: static
             #type: dhcp
             address: 192.168.100.151
+            netmask: 255.255.255.0
             internal_network: network100
           - mode: internal
             type: static
             #type: dhcp
             address: 192.168.101.151
+            netmask: 255.255.255.0
             internal_network: network101
