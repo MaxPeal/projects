@@ -5,6 +5,7 @@ metadata = MetaData()
 {% for column in columns %}
 {%    for key, value in column %}
     Column('
+#{% extends layout_template if layout_template is defined else 'master.html' %}
 {%    endfor %}
 {% endfor %}}
 )
