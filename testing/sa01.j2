@@ -1,0 +1,11 @@
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+metadata = MetaData()
+
+{{ table }} = Table( '{{ table }}', metadata,
+{% for column in columns %}
+{%    for key, value in column %}
+    Column('
+{%    endfor %}
+{% endfor %}}
+)
+

@@ -1,0 +1,5 @@
+
+addresses
+{'type': 'integer', 'name': 'id', 'primary_key': True}
+{'foreign_key': 'users.id', 'name': 'user_id'}
+{'nullable': False, 'type': 'string', 'name': 'email_address'}
