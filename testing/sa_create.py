@@ -27,3 +27,6 @@ for table in s['tables']:
         if "column['type']" in locals(): print(column['type'])
         with open(output_file, 'a') as f:
             f.write(str(column)+"\n")
+
+#TODO: https://stackoverflow.com/questions/38642557/how-to-load-jinja-template-directly-from-filesystem/38642558
+
