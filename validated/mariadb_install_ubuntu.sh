@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+sudo apt update
 PASSWORD=Super123
 DBADMIN=mariadb
 #DBHOST=localhost
@@ -10,8 +12,8 @@ export DEBIAN_FRONTEND="noninteractive"
 
 echo "mariadb-server mysql-server/root_password password $PASSWORD" | sudo debconf-set-selections
 echo "mariadb-server mysql-server/root_password_again password $PASSWORD" | sudo debconf-set-selections
-sudo sed -i -e "s/^bind-address/#bind-address/" /etc/mysql/mariadb.conf.d/50-server.cnf
 sudo apt-get install -y mariadb-server python-mysqldb
+sudo sed -i -e "s/^bind-address/#bind-address/" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # create new root user (root not longer allow login via phpmyadmin...)
 #sudo mysql -uroot -p${PASSWORD} -e "DROP USER IF EXISTS '${DBADMIN}'@'${DBHOST}';"
