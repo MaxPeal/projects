@@ -1,12 +1,28 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
 metadata = MetaData()
 
-{{ table }} = Table( '{{ table }}', metadata,
-{% for column in columns %}
-{%    for key, value in column %}
-    Column('
-#{% extends layout_template if layout_template is defined else 'master.html' %}
-{%    endfor %}
-{% endfor %}}
+
+{% for table in tables %}
+
+{{ table['name'] }} = Table( '{{ table["name"] }}', metadata,
+{%   for column in table["columns"] %}
+    Column(
+{%     for key, value in column.items() %}
+{%       if key == 'name' %}
+	'{{ value }}',
+{%       elif key == 'type' %}
+	{{ value if defined else 'None' }},
+{%       elif key == 'primary_key' %}
+	primary_key={{ value }},
+{%       elif key == 'foreign_key' %}
+        ForeignKey('{{ value }}'),
+{%       else %}
+        {{ key }}={{ value }},
+{%       endif %}
+{%     endfor %}
+    )
+{%   endfor %}}
 )
+
+{% endfor %}
 

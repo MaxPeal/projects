@@ -10,6 +10,7 @@ export DEBIAN_FRONTEND="noninteractive"
 
 echo "mariadb-server mysql-server/root_password password $PASSWORD" | sudo debconf-set-selections
 echo "mariadb-server mysql-server/root_password_again password $PASSWORD" | sudo debconf-set-selections
+sudo sed -i -e "s/^bind-address/#bind-address/" /etc/mysql/mariadb.conf.d/50-server.cnf
 sudo apt-get install -y mariadb-server python-mysqldb
 
 # create new root user (root not longer allow login via phpmyadmin...)
@@ -18,3 +19,6 @@ sudo mysql -uroot -p${PASSWORD} -e "DROP USER '${DBADMIN}'@'${DBHOST}';" 2> /dev
 sudo mysql -uroot -p${PASSWORD} -e "CREATE USER '${DBADMIN}'@'${DBHOST}' IDENTIFIED BY '${PASSWORD}';"
 sudo mysql -uroot -p${PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO '${DBADMIN}'@'${DBHOST}' WITH GRANT OPTION;"
 sudo mysql -uroot -p${PASSWORD} -e "FLUSH PRIVILEGES;"
+
+
+
