@@ -4,19 +4,51 @@ tables:
   - name: users
     columns:
       - name: id
-        type: integer
+        type: Integer
+        autoincrement: true
+        index: true
         primary_key: true
+        #nullable: true
+	#foreign_key: 
+
       - name: name
-        type: string
+        type: String(50)
+        #autoincrement: true
+        #index: true
+        #primary_key: true
+        #nullable: true
+	#foreign_key: 
+
       - name: fullname
-        type: string
+        type: String(100)
+        #autoincrement: true
+        #index: true
+        #primary_key: true
+        #nullable: true
+	#foreign_key: 
+
   - name: addresses
     columns:
       - name: id
-        type: integer
+        type: Integer
+        autoincrement: true
+        index: true
         primary_key: true
+        #nullable: true
+	#foreign_key: 
+
       - name: user_id
+	type: None
+        #autoincrement: true
+        #index: true
+        #primary_key: true
+        #nullable: true
         foreign_key: users.id
+
       - name: email_address
-        type: string
+        type: String(200)
+        #autoincrement: true
+        #index: true
+        #primary_key: true
         nullable: false
+        #foreign_key: users.id

@@ -21,6 +21,7 @@ virtualenv -p python3 ~/venv
 
 pip install Flask
 pip install sqlalchemy
+pip install PyMySQL
 
 deactivate
 
