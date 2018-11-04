@@ -7,8 +7,8 @@ with open("sa01.yml", "r") as stream:
     s = yaml.load(stream)
 #stream.close()
 # data
-with open(s["meta"]["data"]+".yml", "r") as stream:
-    d = yaml.load(stream)
+#with open(s["meta"]["data"]+".yml", "r") as stream:
+#    d = yaml.load(stream)
 #stream.close()
 
 TEMPLATE_DIR = "./"
@@ -26,7 +26,8 @@ with open(OUTPUT_FILE, "w") as f:
 print(outputText)
 
 template = templateEnv.get_template(DML_TEMP)
-outputText = template.render(tables=d["data"]["tables"])
+#outputText = template.render(tables=d["data"]["tables"])
+outputText = template.render(tables=s["tables"])
 with open(DML_FILE, "w") as f:
     f.write(outputText)
 #f.close()
