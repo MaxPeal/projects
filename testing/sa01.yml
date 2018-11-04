@@ -5,50 +5,53 @@ tables:
     columns:
       - name: id
         type: Integer
-        autoincrement: true
-        index: true
-        primary_key: true
-        #nullable: true
-	#foreign_key: 
-
+        #foreign_key: 
+        attributes: {
+          primary_key: true, autoincrement: true, index: true, nullable: false
+        }
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true
       - name: name
         type: String(50)
-        #autoincrement: true
-        #index: true
-        #primary_key: true
-        #nullable: true
-	#foreign_key: 
-
+        #foreign_key: 
+        attributes: {}
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true
       - name: fullname
         type: String(100)
-        #autoincrement: true
-        #index: true
-        #primary_key: true
-        #nullable: true
-	#foreign_key: 
-
+        #foreign_key: 
+        attributes: {}
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true
   - name: addresses
     columns:
       - name: id
         type: Integer
-        autoincrement: true
-        index: true
-        primary_key: true
-        #nullable: true
-	#foreign_key: 
-
+        #foreign_key: 
+        attributes: {primary_key: true}
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true
       - name: user_id
-	type: None
-        #autoincrement: true
-        #index: true
-        #primary_key: true
-        #nullable: true
+        type: None
         foreign_key: users.id
-
+        attributes: {}
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true
       - name: email_address
         type: String(200)
-        #autoincrement: true
-        #index: true
-        #primary_key: true
-        nullable: false
-        #foreign_key: users.id
+        #foreign_key: 
+        attributes: {}
+          #index: true
+          #primary_key: true
+          #nullable: true
+          #autoincrement: true

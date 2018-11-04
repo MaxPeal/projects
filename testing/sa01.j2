@@ -1,28 +1,20 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, create_engine
+engine = create_engine('mysql+pymysql://mariadb:Super123@192.168.56.101/mydatabase')
 metadata = MetaData()
 
-
-{% for table in tables %}
-
+{%	for table in tables %}
 {{ table['name'] }} = Table( '{{ table["name"] }}', metadata,
-{%   for column in table["columns"] %}
-    Column(
-{%     for key, value in column.items() %}
-{%       if key == 'name' %}
-	'{{ value }}',
-{%       elif key == 'type' %}
-	{{ value if defined else 'None' }},
-{%       elif key == 'primary_key' %}
-	primary_key={{ value }},
-{%       elif key == 'foreign_key' %}
-        ForeignKey('{{ value }}'),
-{%       else %}
+{%		for column in table["columns"] %}
+    Column('{{column["name"]}}', {{column["type"]}}, 
+{%			if column["foreign_key"] is defined %}
+        ForeignKey('{{ column["foreign_key"] }}'),
+{%			endif %}
+{%			for key, value in column["attributes"].items() %}
         {{ key }}={{ value }},
-{%       endif %}
-{%     endfor %}
-    )
-{%   endfor %}}
+{%			endfor %}
+    ),
+{%		endfor %}
 )
+{%	endfor %}
 
-{% endfor %}
-
+metadata.create_all(engine)
