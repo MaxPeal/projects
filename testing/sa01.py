@@ -1,13 +1,14 @@
-from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, create_engine
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Sequence, create_engine
 engine = create_engine('mysql+pymysql://mariadb:Super123@192.168.56.101/mydatabase')
 metadata = MetaData()
 
 users = Table( 'users', metadata,
     Column('id', Integer, 
-        nullable=False,
+        Sequence('user_id_seq'),
         autoincrement=True,
-        primary_key=True,
+        nullable=False,
         index=True,
+        primary_key=True,
     ),
     Column('name', String(50), 
     ),
@@ -16,6 +17,7 @@ users = Table( 'users', metadata,
 )
 addresses = Table( 'addresses', metadata,
     Column('id', Integer, 
+        Sequence('address_id_seq'),
         primary_key=True,
     ),
     Column('user_id', None, 

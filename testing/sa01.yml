@@ -1,11 +1,18 @@
 ---
 # table definition
+database:
+  name: mydatabase
+  address: 192.168.56.101
+  user: mariadb
+  password: Super123
+
 tables:
   - name: users
     columns:
       - name: id
         type: Integer
         #foreign_key: 
+        sequence: user_id_seq
         attributes: {
           primary_key: true, autoincrement: true, index: true, nullable: false
         }
@@ -34,6 +41,7 @@ tables:
       - name: id
         type: Integer
         #foreign_key: 
+        sequence: address_id_seq
         attributes: {primary_key: true}
           #index: true
           #primary_key: true
