@@ -71,6 +71,10 @@ Vagrant.configure("2") do |config|
 			end
 			_loop_count = _loop_count + 1
 		  end
+		machine.vm.provision "shell", inline: <<-SHELL
+			sudo sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
+			sudo service ssh restart
+		SHELL
 	  end
   end
   # Disable automatic box update checking. If you disable this, then
