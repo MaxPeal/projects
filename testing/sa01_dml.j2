@@ -1,0 +1,37 @@
+from sqlalchemy import func, select
+from sa01 import engine
+{% for table in tables %}
+from sa01 import {{ table["name"] }}
+{% endfor %}
+
+conn = engine.connect()
+
+{% for table in tables %}
+{{ table["name"] }}_insert = {{ table["name"] }}.insert()
+#conn.execute({{ table["name"] }}_insert , [
+{%	for record in table["data"] %}
+#    {
+{%		for fielddata in record %}
+#        '{{ table["columns"][loop.index0] }}': '{{ fielddata }}' ,
+{%		endfor %}
+#    },
+{%	endfor %}
+#])
+{% endfor %}
+
+{% for table in tables %}
+{{ table["name"] }}_select = select([{{ table["name"] }}])
+#conn.execute({{ table["name"] }}_select).fetchall()
+{% endfor %}
+
+{% for table in tables %}
+{{ table["name"] }}_update = {{ table["name"] }}.update()
+#conn.execute({{ table["name"] }}_update, [
+#
+#])
+{% endfor %}
+
+{% for table in tables %}
+{{ table["name"] }}_delete = {{ table["name"] }}.delete()
+#conn.execute({{ table["name"] }}_delete)
+{% endfor %}

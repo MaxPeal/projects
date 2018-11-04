@@ -1,0 +1,14 @@
+data:
+  tables:
+    - name: users
+      columns: 
+        #- id
+        - name
+        - fullname
+      data:
+        #- [ 1, name_test, fullname_test ]
+        #- [ 2, name_test2, fullname_test2 ]
+        - [ name_test, fullname_test ]
+        - [ name_test2, fullname_test2 ]
+
+      

@@ -1,3 +1,3 @@
-pyyaml
-pymysql
+PyYAML
+PyMYSQL
 sqlalchemy

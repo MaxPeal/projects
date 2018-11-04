@@ -1,5 +1,8 @@
 ---
-# table definition
+meta:
+  schema: sa01
+  data: sa01_data
+
 database:
   name: mydatabase
   address: 192.168.56.101
