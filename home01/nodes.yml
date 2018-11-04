@@ -1,6 +1,7 @@
 ---
 - hostname: control01
-  group: controller
+  groups: 
+          - controller
   interfaces:
           - mode: host_only
             #type: dhcp
@@ -18,7 +19,7 @@
             netmask: 255.255.255.0
             internal_network: network101
 - hostname: gateway01
-  group: gateway
+  groups: [gateway]
   interfaces:
           - mode: internal
             type: static
@@ -43,7 +44,7 @@
 #            #default_gateway: 172.31.0.1
 #            #bridge_interfaces: ["enp1s0f2", "enp1s0f3"]
 - hostname: node01
-  group: client
+  groups: [client]
   interfaces:
           - mode: host_only
             #type: dhcp
@@ -63,10 +64,10 @@
             netmask: 255.255.255.0
             internal_network: network101
 - hostname: node02
-  group: client
+  groups: [client]
   interfaces: []
 - hostname: db01
-  group: database
+  groups: [database]
   interfaces:
           - mode: host_only
             #type: dhcp
@@ -86,7 +87,7 @@
             netmask: 255.255.255.0
             internal_network: network101
 - hostname: app01
-  group: application
+  groups: [application]
   interfaces:
           - mode: host_only
             #type: dhcp
