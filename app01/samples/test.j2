@@ -1,0 +1,23 @@
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Sequence, create_engine
+engine = create_engine('mysql+pymysql://{{ database["user"]}}:{{ database["password"] }}@{{ database["address"] }}/{{ database["name"] }}')
+metadata = MetaData()
+
+{%	for table in database["tables"] %}
+{{ table['name'] }} = Table( '{{ table["name"] }}', metadata,
+{%		for column in table["columns"] %}
+    Column('{{column["name"]}}', {{column["type"]}}, 
+{%			if column["foreign_key"] is defined %}
+        ForeignKey('{{ column["foreign_key"] }}'),
+{%			endif %}
+{%			if column["sequence"] is defined %}
+        Sequence('{{ column["sequence"] }}'),
+{%			endif %}
+{%			for key, value in column["attributes"].items() %}
+        {{ key }}={{ value }},
+{%			endfor %}
+    ),
+{%		endfor %}
+)
+{%	endfor %}
+
+metadata.create_all(engine)
