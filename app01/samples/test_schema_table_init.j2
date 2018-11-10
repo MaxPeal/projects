@@ -1,5 +1,7 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Sequence, create_engine
-engine = create_engine('mysql+pymysql://{{ database["user"]}}:{{ database["password"] }}@{{ database["address"] }}/{{ database["name"] }}')
+
+{% for database in host['databases'] %}
+engine = create_engine('mysql+pymysql://{{ host["db_user"]}}:{{ host["db_password"] }}@{{ host["db_address"] }}/{{ database["name"] }}')
 metadata = MetaData()
 
 {%	for table in database["tables"] %}
@@ -21,3 +23,5 @@ metadata = MetaData()
 {%	endfor %}
 
 metadata.create_all(engine)
+
+{% endfor %}

@@ -1,0 +1,47 @@
+---
+host:
+  name: db01
+  db_user: mariadb
+  db_password: Super123
+  db_address: 192.168.56.101
+  databases:
+    - name: mydatabase
+      tables:
+        - name: users
+          columns:
+            - name: id
+              type: Integer
+              #foreign_key:
+              sequence: user_id_seq
+              attributes: {
+                primary_key: true, autoincrement: true, index: true, nullable: false
+              }
+            - name: name
+              type: String(50)
+              #foreign_key:
+              #sequence: user_id_seq
+              attributes: {}
+            - name: fullname
+              type: String(100)
+              #foreign_key:
+              #sequence: user_id_seq
+              attributes: {}
+        - name: addresses
+          columns:
+            - name: id
+              type: Integer
+              #foreign_key:
+              #sequence: user_id_seq
+              sequence: address_id_seq
+              attributes: {
+                primary_key: true, autoincrement: true, index: true, nullable: false
+              }
+            - name: user_id
+              type: None
+              foreign_key: users.id
+              #sequence: user_id_seq
+              attributes: {}
+            - name: email_address
+              type: String(200)
+              #foreign_key:
+              attributes: {}
