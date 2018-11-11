@@ -4,10 +4,10 @@ import yaml
 
 SCHEMA_FILE="test_schema.yml"
 TEMPLATE_DIR = "./"
-TEMPLATE_FILE_DB_INIT = "test_schema_db_init.j2"
-OUTPUT_FILE_DB_INIT = "test_schema_db_init.sh"
-TEMPLATE_FILE_TABLE_INIT = "test_schema_table_init.j2"
-OUTPUT_FILE_TABLE_INIT = "test_schema_table_init.py"
+TEMPLATE_FILE_DB_INIT = "test_schema_db_create.j2"
+OUTPUT_FILE_DB_INIT = "test_schema_db_create.sh"
+TEMPLATE_FILE_TABLE_INIT = "test_schema_table_create.j2"
+OUTPUT_FILE_TABLE_INIT = "test_schema_table_create.py"
 # loading yaml file
 with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
     s = yaml.load(f)
