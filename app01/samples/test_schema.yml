@@ -14,7 +14,7 @@ host:
               #foreign_key:
               sequence: user_id_seq
               attributes: {
-                primary_key: true, autoincrement: true, index: true, nullable: false
+                primary_key: true, autoincrement: true, index: true, nullable: false, unique: true
               }
             - name: name
               type: String(50)
@@ -34,7 +34,7 @@ host:
               #sequence: user_id_seq
               sequence: address_id_seq
               attributes: {
-                primary_key: true, autoincrement: true, index: true, nullable: false
+                primary_key: true, autoincrement: true, index: true, nullable: false, unique: true
               }
             - name: user_id
               type: None
