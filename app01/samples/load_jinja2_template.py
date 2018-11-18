@@ -2,21 +2,30 @@
 import jinja2
 import yaml
 
-SCHEMA_FILE="test.yml"
+SCHEMA_FILE="test_schema.yml"
 TEMPLATE_DIR = "./"
-TEMPLATE_FILE = "test.j2"
-OUTPUT_FILE = "test.py"
+TEMPLATE_FILE_DB_CREATE = "test_schema_db_create.j2"
+OUTPUT_FILE_DB_CREATE = "test_schema_db_create.sh"
+TEMPLATE_FILE_TABLE_CREATE = "test_schema_table_create.j2"
+OUTPUT_FILE_TABLE_CREATE = "test_schema_table_create.py"
 # loading yaml file
 with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
     s = yaml.load(f)
 
-# loading jinja2 template
+
 templateLoader = jinja2.FileSystemLoader(searchpath=TEMPLATE_DIR)
 templateEnv = jinja2.Environment(loader=templateLoader, trim_blocks=True, lstrip_blocks=True)
-template = templateEnv.get_template(TEMPLATE_FILE)
-renderedText = template.render(database=s["database"]) # this is where to put args to the template renderer
 
-# writing rendered output
-with open(OUTPUT_FILE, "w") as f:
+# generating db init script
+template = templateEnv.get_template(TEMPLATE_FILE_DB_CREATE)
+renderedText = template.render(host=s["host"])
+with open(OUTPUT_FILE_DB_CREATE, "w") as f:
+    f.write(renderedText)
+print(renderedText)
+
+# generating table init script
+template = templateEnv.get_template(TEMPLATE_FILE_TABLE_CREATE)
+renderedText = template.render(host=s["host"]) # this is where to put args to the template renderer
+with open(OUTPUT_FILE_TABLE_CREATE, "w") as f:
     f.write(renderedText)
 print(renderedText)

@@ -6,7 +6,6 @@ database:
   password: Super123
   tables:
     - name: users
-      class_name: User
       columns:
         - name: id
           type: Integer
@@ -26,7 +25,6 @@ database:
           #sequence: user_id_seq
           attributes: {}
     - name: addresses
-      class_name: Address
       columns:
         - name: id
           type: Integer
@@ -45,22 +43,3 @@ database:
           type: String(200)
           #foreign_key:
           attributes: {}
-  relationships:
-    - one_to_many:
-        tables:
-          primary:
-            name: users
-          secondary:
-            name: addresses
-    - one_to_one:
-        tables:
-          primary:
-            name: users
-          secondary:
-            name: addresses
-    - many_to_many:
-        tables:
-          primary:
-            name: users
-          secondary:
-            name: addresses
