@@ -6,8 +6,9 @@ engine = create_engine('mysql+pymysql://{{ host["db_user"]}}:{{ host["db_passwor
 metadata = MetaData()
 
 {%	for table in database["tables"] %}
-{{ table['name'] }} = Table( '{{ table["name"] }}', metadata,
-{%		for column in table["columns"] %}
+{%  set columns = database["tables"][table]["columns"] %}
+{{ table }} = Table( '{{ table }}', metadata,
+{%		for column in columns %}
     Column('{{column["name"]}}', {{column["type"]}}, 
 {%			if column["foreign_key"] is defined %}
         ForeignKey('{{ column["foreign_key"] }}'),

@@ -1,0 +1,17 @@
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engines = {}
+sessions = {}
+{% for database in host['databases'] %}
+
+# engines['{{ database['name'] }}'] = create_engine('sqlite:///:memory:', echo=True)
+engines['{{ database['name'] }}'] = create_engine('mysql+pymysql://{{ host["db_user"]}}:{{ host["db_password"] }}@{{ host["db_address"] }}/{{ database["name"] }}', echo=True)
+
+Session = sessionmaker()
+Session.configure(bind=engines['{{ database['name'] }}'])
+sessions['{{ database['name'] }}'] = Session()
+
+
+{% endfor %}
