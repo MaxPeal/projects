@@ -6,6 +6,7 @@ host:
   db_address: 192.168.56.101
   databases:
     - name: mydatabase
+      app_name: test
       tables:
         User:
         #- name: users

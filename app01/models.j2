@@ -1,0 +1,95 @@
+from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, Table
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+{% for database in host['databases'] %}
+
+{%  for class_name in database['tables'] %}
+{%  set table = database['tables'][class_name]['name'] %}
+{%  set columns = database['tables'][class_name]['columns'] %}
+
+class {{ class_name }}(Base):
+    __tablename__ = '{{ table }}'
+
+{%    for pk_column in columns['primary_keys'] %}
+    {{ pk_column['name'] }} = Column({{ pk_column['type'] }},
+{%      if pk_column["foreign_key"] is defined and pk_column["foreign_key"] is not none %}
+        ForeignKey('{{ pk_column["foreign_key"] }}'),
+{%		endif %}
+{%		if pk_column["sequence"] is defined and pk_column["sequence"] is not none %}
+        Sequence('{{ pk_column["sequence"] }}'),
+{%		endif %}
+{%      if pk_column["attributes"] is defined and pk_column["attributes"] is not none %}
+{%		for key, value in pk_column["attributes"].items() %}
+        {{ key }}={{ value }},
+{%		endfor %}
+{%      endif %}
+    )
+{%    endfor %}
+{%    for column in columns['regulars'] %}
+    {{ column['name'] }} = Column({{ column['type'] }},
+{%      if column["foreign_key"] is defined and column["foreign_key"] is not none %}
+        ForeignKey('{{ column["foreign_key"] }}'),
+{%		endif %}
+{%		if column["sequence"] is defined and column["sequence"] is not none %}
+        Sequence('{{ column["sequence"] }}'),
+{%		endif %}
+{%      if column["attributes"] is defined and column["attributes"] is not none %}
+{%		for key, value in column["attributes"].items() %}
+        {{ key }}={{ value }},
+{%		endfor %}
+{%      endif %}
+    )
+{%    endfor %}
+
+
+{%  endfor %}
+{#  table loop end #}
+
+{%  for relationship in database['relationships'] %}
+    {% set class_primary = relationship['primary']['class_name'] %}
+    {% set class_secondary = relationship['secondary']['class_name'] %}
+    {% set table1 = database['tables'][class_primary] %}
+    {% set table1_name = database['tables'][class_primary]['name'] %}
+    {% set table2 = database['tables'][class_secondary] %}
+    {% set table2_name = database['tables'][class_secondary]['name'] %}
+    {% set ref_primary = relationship['primary']['ref'] %}
+    {% set ref_secondary = relationship['secondary']['ref'] %}
+    {% set pks1 = table1['columns']['primary_keys'] %}
+    {% set pks2 = table2['columns']['primary_keys'] %}
+    {% set association_table = 'association_'+table1_name+'_'+table2_name %}
+    {% if relationship['type'] == 'one_to_many' %}
+### one to many!
+{{ class_primary }}.{{ ref_primary }} = relationship("{{ class_secondary }}", back_populates="{{ ref_secondary }}")
+{{ class_secondary }}.{{ref_secondary }} = relationship("{{ class_primary }}", back_populates="{{ ref_primary}}")
+{% for fk in pks1 %}
+{{ class_secondary }}.{{ref_secondary }}_{{ fk['name'] }} = Column({{ fk['type'] }}, ForeignKey('{{ table1_name+'.'+fk['name'] }}'))
+{% endfor %}
+    {% elif relationship['type'] == 'one_to_one' %}
+### one to one!
+{{ class_primary }}.{{ ref_primary }} = relationship("{{ class_secondary }}", back_populates="{{ ref_secondary }}", uselist=False)
+{{ class_secondary }}.{{ref_secondary }} = relationship("{{ class_primary }}", back_populates="{{ ref_primary}}")
+{% for fk in pks1 %}
+{{ class_secondary }}.{{ref_secondary }}_{{ fk['name'] }} = Column({{ fk['type'] }}, ForeignKey('{{ table1_name+'.'+fk['name'] }}'))
+{% endfor %}
+    {% elif relationship['type'] == 'many_to_many' %}
+### many to many!
+{{ association_table }} = Table('{{ association_table }}', Base.metadata,
+{% for fk in pks1 %}
+    Column('{{ table1_name+'_'+fk['name'] }}', {{ fk['type'] }}, ForeignKey('{{ table1_name+'.'+fk['name'] }}')),
+{% endfor %}
+{% for fk in pks2 %}
+    Column('{{ table2_name+'_'+fk['name'] }}', {{ fk['type'] }}, ForeignKey('{{ table2_name+'.'+fk['name'] }}')),
+{% endfor %}
+)
+{{ class_primary }}.{{ ref_primary }} = relationship("{{ class_secondary }}", secondary={{ association_table }}, back_populates="{{ ref_secondary }}", uselist=False)
+{{ class_secondary }}.{{ref_secondary }} = relationship("{{ class_primary }}", secondary={{ association_table }}, back_populates="{{ ref_primary}}")
+
+
+    {% endif %}
+
+{%  endfor %}
+
+{% endfor %}

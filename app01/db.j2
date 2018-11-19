@@ -12,7 +12,7 @@ engines['{{ database['name'] }}'] = create_engine('mysql+pymysql://{{ host["db_u
 # Session = sessionmaker()
 Session = scoped_session(sessionmaker())
 Session.configure(bind=engines['{{ database['name'] }}'])
-sessions['{{ database['name'] }}'] = Session()
+# sessions['{{ database['name'] }}'] = Session()
 
 
 {% endfor %}

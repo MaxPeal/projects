@@ -1,0 +1,21 @@
+import json
+from flask import Blueprint
+from .db import Session
+{% for database in host['databases'] %}
+{%  for table in database['tables'] %}
+from .models import {{ table }}
+{%  endfor %}
+{% endfor %}
+{% for database in host['databases'] %}
+{%  set app_name = database['app_name'] %}
+{%  set blueprint_name = app_name+'_blueprint' %}
+{{ blueprint_name }} = Blueprint('{{ app_name }}', __name__)
+{%  for table in database['tables'] %}
+{%      set table_name = database['tables'][table]['name'] %}
+
+
+@{{ blueprint_name }}.route('/{{ table_name }}')
+def {{ table_name }}():
+    values = Session.query({{ table }}).all()
+{%  endfor %}
+{% endfor %}

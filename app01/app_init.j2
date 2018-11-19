@@ -1,0 +1,18 @@
+# copy and past into Flask application (e.g. __init__.py)
+from flask import Flask
+from .db import Session
+{% for database in host['databases'] %}
+{% set app_name = database['app_name'] %}
+from .app import {{ app_name }}_blueprint
+{% endfor %}
+
+app = Flask(__name__)
+{% for database in host['databases'] %}
+{% set app_name = database['app_name'] %}
+app.register_blueprint({{ app_name }}_blueprint)
+{% endfor %}
+
+
+@app.teardown_appcontext
+def cleanup(resp_or_exc):
+    Session.remove()
