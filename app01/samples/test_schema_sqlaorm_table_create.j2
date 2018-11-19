@@ -21,9 +21,11 @@ class {{ class_name }}(Base):
 {%		if pk_column["sequence"] is defined and pk_column["sequence"] is not none %}
         Sequence('{{ pk_column["sequence"] }}'),
 {%		endif %}
+{%      if pk_column["attributes"] is defined and pk_column["attributes"] is not none %}
 {%		for key, value in pk_column["attributes"].items() %}
         {{ key }}={{ value }},
 {%		endfor %}
+{%      endif %}
     )
 {%    endfor %}
 {%    for column in columns['regulars'] %}
@@ -34,9 +36,11 @@ class {{ class_name }}(Base):
 {%		if column["sequence"] is defined and column["sequence"] is not none %}
         Sequence('{{ column["sequence"] }}'),
 {%		endif %}
+{%      if column["attributes"] is defined and column["attributes"] is not none %}
 {%		for key, value in column["attributes"].items() %}
         {{ key }}={{ value }},
 {%		endfor %}
+{%      endif %}
     )
 {%    endfor %}
 
@@ -83,10 +87,9 @@ class {{ class_name }}(Base):
 {{ class_primary }}.{{ ref_primary }} = relationship("{{ class_secondary }}", secondary={{ association_table }}, back_populates="{{ ref_secondary }}", uselist=False)
 {{ class_secondary }}.{{ref_secondary }} = relationship("{{ class_primary }}", secondary={{ association_table }}, back_populates="{{ ref_primary}}")
 
+
     {% endif %}
 
 {%  endfor %}
-
-
 
 {% endfor %}

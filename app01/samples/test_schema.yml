@@ -29,7 +29,7 @@ host:
                 type: String(100)
                 #foreign_key:
                 #sequence: user_id_seq
-                attributes: {}
+                #attributes: null
         Address:
         #- name: addresses
           name: addresses
@@ -57,10 +57,10 @@ host:
         - type: one_to_many
           primary: {class_name: User, ref: addresses}
           secondary: {class_name: Address, ref: user}
-        - type: one_to_one
-          primary: {class_name: User, ref: address}
-          secondary: {class_name: Address, ref: user}
-        - type: many_to_many
-          primary: {class_name: User, ref: addresses}
-          secondary: {class_name: Address, ref: users}
+        #- type: one_to_one
+        #  primary: {class_name: User, ref: address}
+        #  secondary: {class_name: Address, ref: user}
+        #- type: many_to_many
+        #  primary: {class_name: User, ref: addresses}
+        #  secondary: {class_name: Address, ref: users}
 

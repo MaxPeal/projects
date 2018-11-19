@@ -27,3 +27,98 @@ metadata = MetaData()
 metadata.create_all(engine)
 
 {% endfor %}
+/samples/load_jinja2_template.py
+#!/bin/bash
+
+sudo apt update
+export DEBIAN_FRONTEND="noninteractive"
+DBADMIN=mariadb
+DBPASSWORD=Super123
+#DBHOST=localhost
+DBHOST=% # for remote user
+
+echo "mariadb-server mysql-server/root_password password $DBPASSWORD" | sudo debconf-set-selections
+echo "mariadb-server mysql-server/root_password_again password $DBPASSWORD" | sudo debconf-set-selections
+sudo apt-get install -y mariadb-server python-mysqldb
+sudo sed -i -e "s/^bind-address/#bind-address/" /etc/mysql/mariadb.conf.d/50-server.cnf
+sudo service mysql restart
+
+
+DB=mydatabase
+# create new root user (root not longer allow login via phpmyadmin...)
+#sudo mysql -uroot -p${DBPASSWORD} -e "DROP USER IF EXISTS '${DBADMIN}'@'${DBHOST}';"
+sudo mysql -uroot -p${DBPASSWORD} -e "CREATE DATABASE $DB;" 2> /dev/null
+sudo mysql -uroot -p${DBPASSWORD} -e "DROP USER '${DBADMIN}'@'${DBHOST}';" 2> /dev/null
+sudo mysql -uroot -p${DBPASSWORD} -e "CREATE USER '${DBADMIN}'@'${DBHOST}' IDENTIFIED BY '${DBPASSWORD}';"
+sudo mysql -uroot -p${DBPASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO '${DBADMIN}'@'${DBHOST}' WITH GRANT OPTION;"
+sudo mysql -uroot -p${DBPASSWORD} -e "FLUSH PRIVILEGES;"
+
+
+
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engines = {}
+sessions = {}
+
+engines['mydatabase'] = create_engine('sqlite:///:memory:', echo=True)
+# engines['mydatabase'] = create_engine('mysql+pymysql://mariadb:Super123@192.168.56.101/mydatabase', echo=True)
+
+Session = sessionmaker()
+Session.configure(bind=engines['mydatabase'])
+sessions['mydatabase'] = Session()
+
+
+
+from sqlalchemy import Column, Integer, String, ForeignKey, Sequence, Table
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+
+
+class Address(Base):
+    __tablename__ = 'addresses'
+
+    id = Column(Integer,
+        Sequence('address_id_seq'),
+        primary_key=True,
+        nullable=False,
+        index=True,
+        unique=True,
+        autoincrement=True,
+    )
+    email_address = Column(String(200),
+    )
+
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer,
+        Sequence('user_id_seq'),
+        primary_key=True,
+        nullable=False,
+        index=True,
+        unique=True,
+        autoincrement=True,
+    )
+    name = Column(String(50),
+    )
+    fullname = Column(String(100),
+    )
+
+
+
+### one to many!
+User.addresses = relationship("Address", back_populates="user")
+Address.user = relationship("User", back_populates="addresses")
+Address.user_id = Column(Integer, ForeignKey('users.id'))
+
+
+
+
+Process finished with exit code 0
