@@ -5,7 +5,9 @@ sudo apt-get update
 sudo apt-get install -y apache2
 sudo apache2ctl configtest
 
-cat <<EOF | tee -a /etc/apache2/apache2.conf
+
+sudo sed -i -e "/#>>>>>/,/#<<<<</d" /etc/apache2/apache2.conf
+cat <<EOF | sudo tee -a /etc/apache2/apache2.conf
 #>>>>>
 ServerName $(hostname)
 #<<<<<

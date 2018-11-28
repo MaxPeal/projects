@@ -24,11 +24,14 @@ sudo apt-get install -y php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlr
 sudo systemctl restart apache2
 
 # 
-cat <<EOF | sudo tree -a /etc/apache2/apache2.conf
+sudo sed -i -e "/#>>>>>/,/#<<<<</d" /etc/apache2/apache2.conf
+cat <<EOF | sudo tee -a /etc/apache2/apache2.conf
 #>>>>>
+
 <Directory /var/www/html/>
     AllowOverride All
 </Directory>
+
 #<<<<<
 EOF
 
@@ -47,10 +50,13 @@ touch /tmp/wordpress/.htaccess
 chmod 660 /tmp/wordpress/.htaccess
 cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
 mkdir /tmp/wordpress/wp-content/upgrade
+sudo rm -Rf /var/www/html
 sudo cp -a /tmp/wordpress/. /var/www/html
 
 # configure the wordpress directory
-WPUSER=vagrant
+#WPUSER=vagrant
+#usermod -aG www-data vagrant
+WPUSER=www-data
 sudo chown -R ${WPUSER}:www-data /var/www/html
 sudo find /var/www/html -type d -exec chmod g+s {} \;
 sudo chmod g+w /var/www/html/wp-content
@@ -96,5 +102,6 @@ sudo systemctl restart apache2.service
 sudo systemctl restart mysql.service 
 
 
-
-
+echo "setting password for user: www-data"
+sudo passwd www-data
+sudo chsh -s /bin/bash www-data
