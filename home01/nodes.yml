@@ -106,3 +106,43 @@
             address: 192.168.101.151
             netmask: 255.255.255.0
             internal_network: network101
+- hostname: app02
+  groups: [application]
+  interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.152
+            netmask: 255.255.255.0
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.100.152
+            netmask: 255.255.255.0
+            internal_network: network100
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.101.152
+            netmask: 255.255.255.0
+            internal_network: network101
+- hostname: arewell01
+  groups: [application]
+  interfaces:
+          - mode: host_only
+            #type: dhcp
+            type: static
+            address: 192.168.56.201
+            netmask: 255.255.255.0
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.100.201
+            netmask: 255.255.255.0
+            internal_network: network100
+          - mode: internal
+            type: static
+            #type: dhcp
+            address: 192.168.101.201
+            netmask: 255.255.255.0
+            internal_network: network101
