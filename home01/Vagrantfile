@@ -64,9 +64,15 @@ Vagrant.configure("2") do |config|
 						ip: interface["address"],
 						netmask: interface["netmask"],
 						bridge: interface['bridge_interfaces']
-					machine.vm.provision "shell",
-						run: "always",
-						inline: "route add default gw #{interface['default_gateway']}"
+					#machine.vm.provision "shell",
+					#	run: "always",
+					#	inline: "route add default gw #{interface['default_gateway']}"
+					machine.vm.provision "shell", inline: <<-SHELL
+						GW_IPADDR=$(route -n | grep UG | cut -d' ' -f10)
+						GW_ADAPTER=$(route -n | grep UG | cut -d' ' -f43)
+						route delete default gw $GW_IPADDR $GW_ADAPTER
+						route add default gw #{interface['default_gateway']}
+					SHELL
 				end
 			end
 			_loop_count = _loop_count + 1

@@ -126,7 +126,15 @@
             address: 192.168.101.152
             netmask: 255.255.255.0
             internal_network: network101
-- hostname: arewell01
+          - mode: bridged
+#            type: dhcp
+#            #type: manual
+            type: static
+            address: 192.168.1.152
+            netmask: 255.255.255.0
+            default_gateway: 192.168.1.1
+            bridge_interfaces: ["Intel(R) Wireless-N 7260"]
+- hostname: aretest01
   groups: [application]
   interfaces:
           - mode: host_only
