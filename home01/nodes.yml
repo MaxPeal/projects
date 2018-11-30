@@ -130,14 +130,16 @@
             # wifi adapter @coco-think
             #type: dhcp
             #type: manual
-            #type: static
-            #address: 192.168.1.152
-            #netmask: 255.255.255.0
-            #default_gateway: 192.168.1.1
+            type: static
+            address: 192.168.43.152
+            netmask: 255.255.255.0
+            default_gateway: 192.168.43.1
             #bridge_interfaces: ["Intel(R) Wireless-N 7260"]
-            # wifi adapter @toshiba-pc
-            type: dhcp
             bridge_interfaces: ["Intel(R) Dual Band Wireless-AC 8260"]
+            
+            # wifi adapter @toshiba-pc
+            #type: dhcp
+            #bridge_interfaces: ["Intel(R) Dual Band Wireless-AC 8260"]
 - hostname: aretest01
   groups: [application]
   interfaces:
