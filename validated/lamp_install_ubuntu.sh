@@ -19,6 +19,8 @@ sudo systemctl restart apache2
 # allow apache in firewall
 sudo ufw allow in "Apache Full"
 
+# enable ssl on apache2
+./ssl_apache_install_ubuntu.sh
 # installing mysql
 ./mariadb_install_ubuntu.sh
 
