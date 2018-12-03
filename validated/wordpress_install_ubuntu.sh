@@ -105,3 +105,7 @@ sudo systemctl restart mysql.service
 echo "setting password for user: www-data"
 sudo passwd www-data
 sudo chsh -s /bin/bash www-data
+
+# install phpmyadmin
+#./phpmyadmin_install_ubuntu.sh
+ 
