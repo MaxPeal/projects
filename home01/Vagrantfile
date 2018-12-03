@@ -80,6 +80,28 @@ Vagrant.configure("2") do |config|
 		machine.vm.provision "shell", inline: <<-SHELL
 			sudo sed -i -e "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
 			sudo service ssh restart
+			cat <<-'EOF' >> .bashrc
+				#>>>>>
+				if [ -d ~/projects ]; then
+					_PWD=$(pwd)
+					cd ~/projects
+					git pull origin master			
+					cd $_PWD
+				else
+					_PWD=$(pwd)
+					git clone https://github.com/ktaiga/projects
+					cd $_PWD
+				fi
+				#<<<<<
+			EOF
+			cat <<-'EOF' >> .bash_logout
+				#>>>>>
+				_PWD=$(pwd)
+				cd ~/projects
+				~/projects/git_push.sh
+				cd $_PWD
+				#<<<<<
+			EOF
 		SHELL
 	  end
   end
