@@ -107,5 +107,5 @@ sudo passwd www-data
 sudo chsh -s /bin/bash www-data
 
 # install phpmyadmin
-#./phpmyadmin_install_ubuntu.sh
+./phpmyadmin_install_ubuntu.sh
  
