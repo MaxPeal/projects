@@ -43,6 +43,7 @@ sudo systemctl restart apache2
 
 
 # downloading wordpress cms
+_PWD=$(pwd)
 cd /tmp
 wget -c http://wordpress.org/latest.tar.gz
 tar -xzvf latest.tar.gz
@@ -52,6 +53,8 @@ cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php
 mkdir /tmp/wordpress/wp-content/upgrade
 sudo rm -Rf /var/www/html
 sudo cp -a /tmp/wordpress/. /var/www/html
+
+cd $_PWD
 
 # configure the wordpress directory
 #WPUSER=vagrant
@@ -108,5 +111,5 @@ sudo chsh -s /bin/bash www-data
 
 echo $(pwd)
 # install phpmyadmin
-~/projects/validated/phpmyadmin_install_ubuntu.sh
+./phpmyadmin_install_ubuntu.sh
  
