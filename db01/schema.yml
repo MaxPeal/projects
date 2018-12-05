@@ -1,0 +1,20 @@
+---
+
+tables:
+  products:
+    class_name: Product
+    table_name: products
+    columns:
+      name: id
+      type: string
+      #foreign_key: users.id
+      sequence: product_id_seq
+      attributes:
+        primary_key: true
+        auto_increment: true
+        index: true
+        nullable: false
+        unique: true
+
+
+
