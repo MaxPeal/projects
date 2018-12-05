@@ -106,6 +106,7 @@ echo "setting password for user: www-data"
 sudo passwd www-data
 sudo chsh -s /bin/bash www-data
 
+echo $(pwd)
 # install phpmyadmin
 ~/projects/validated/phpmyadmin_install_ubuntu.sh
  
