@@ -33,10 +33,9 @@ project:
               fields:
                 - field: *record_mark_invalid
             operator:
-              cmp: =
+              cmp: '='
             operand2:
-              value: false
-
+              val: no
     - name: &q_snapshot_deleted SnapshotDeleted
       select:
         plain: &q_snapshot_deleted_select_plain_fields
@@ -62,7 +61,7 @@ project:
                 fields:
                   - field: *record_mark_deleted
             operator:
-              - cmp: =
+              - cmp: '='
             operand2:
               - value: true
 
@@ -78,14 +77,15 @@ project:
           - table: *q_snapshot_deleted
           - table: *q_records_valid
       where:
-        plain:
-          - operand1:
+        - operand1:
+            plain:
               - table: *q_records_valid
                 fields:
                   - field: *id_
-            operator:
+          operator:
               - cmp: <>
-            operand2:
+          operand2:
+            plain:
               - table: *q_snapshot_deleted
                 fields:
                   - field: *id_
@@ -121,14 +121,15 @@ project:
           - table: *q_records_active
           - table: *q_snapshot_active
         on:
-          plain:
-            - operand1:
+          - operand1:
+              plain:
                 - table: *q_records_active
                   fields:
                     - field: *record_date
               operator:
                 - cmp: <>
-              operand2:
+            operand2:
+              max:
                 - table: *q_snapshot_active
                   fields:
                     - field: *record_date #add Of MAX here (incomplete)

@@ -1,0 +1,14 @@
+
+dim s as string
+
+{% for query in project['queries'] %}
+' {{ query['name'] }}
+' select clause
+{%  for select_fields in query['select']['plain'] %}
+{%      set field_table = select_field['table'] %}
+{%      set field = field_table+'.'+select_field['field']
+{%  endfor %}
+{%  set select_plain = query['select']['plain'] %}
+{%  set select_plain_table = select_plain[0]['table'] %}
+s = s & "{{ select_plain_table }}.xxx"
+{% endfor %}
