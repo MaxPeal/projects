@@ -1,0 +1,136 @@
+---
+project:
+  name: auto query gen
+  tables:
+    - table: &t_base Records
+      fields:
+        - field: &record_id nrecord_id
+        - field: &record_date record_date
+        - field: &record_tag record_tag
+        - field: &record_mark_deleted record_mark_deleted
+        - field: &record_mark_invalid record_mark_invalid
+        - field: &record_remark record_remark
+        - field: &id_ id_
+      ids:
+        - field: *record_id
+        - field: *record_date
+      feed_ids: &feed_ids
+        - field: *id_
+  queries:
+    - name: &q_records_valid RecordValid
+      select:
+        plain:
+          - table: *t_base
+            fields:
+              - field: "*"
+      from:
+        plain:
+          - table: *t_base
+      where:
+        plain:
+          - operand1:
+              table: *t_base
+              fields:
+                - field: *record_mark_invalid
+            operator:
+              cmp: =
+            operand2:
+              value: false
+
+    - name: &q_snapshot_deleted SnapshotDeleted
+      select:
+        plain: &q_snapshot_deleted_select_plain_fields
+          - table: *q_records_valid
+            fields:
+              - field: *id_
+              - field: *record_mark_deleted
+              - field: *record_mark_invalid
+        max:
+          - table: *q_records_valid
+            fields:
+              - field: *record_date
+                alias_prefix: max_
+      from:
+        plain:
+          - table: *q_records_valid
+      group_by:
+        plain: *q_snapshot_deleted_select_plain_fields
+      having:
+        plain:
+          - operand1:
+              - table: *q_records_valid
+                fields:
+                  - field: *record_mark_deleted
+            operator:
+              - cmp: =
+            operand2:
+              - value: true
+
+
+    - name: &q_records_active RecordsActive
+      select:
+        plain:
+          - table: *q_records_valid
+            fields:
+            - field: "*"
+      from:
+        plain:
+          - table: *q_snapshot_deleted
+          - table: *q_records_valid
+      where:
+        plain:
+          - operand1:
+              - table: *q_records_valid
+                fields:
+                  - field: *id_
+            operator:
+              - cmp: <>
+            operand2:
+              - table: *q_snapshot_deleted
+                fields:
+                  - field: *id_
+
+
+    - name: &q_snapshot_active SnapshotActive
+      select:
+        plain: &q_snapshot_active_select_plain_fields
+          - table: *q_records_active
+            fields:
+              - field: *id_
+              - field: *record_mark_deleted
+              - field: *record_mark_invalid
+        max:
+          - table: *q_records_active
+            fields:
+              - field: *record_date
+                alias_prefix: max_
+      from:
+        plain:
+          - table: *q_records_active
+      group_by:
+        plain: *q_snapshot_active_select_plain_fields
+
+    - name: &q_master Master
+      select:
+        plain:
+          - table: *q_records_active
+            fields:
+              - field: "*"
+      from:
+        inner_join:
+          - table: *q_records_active
+          - table: *q_snapshot_active
+        on:
+          plain:
+            - operand1:
+                - table: *q_records_active
+                  fields:
+                    - field: *record_date
+              operator:
+                - cmp: <>
+              operand2:
+                - table: *q_snapshot_active
+                  fields:
+                    - field: *record_date #add Of MAX here (incomplete)
+
+
