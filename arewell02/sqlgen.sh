@@ -21,6 +21,7 @@ declare -A FLDS_NAME
 declare -A FLDS_TYPE
 declare -a FLDS_INDEX
 declare -a FLDS_PK
+declare -a 
 n=0
 FLDS_NAME[$n]=${FLD_RECORD_ID}
 	FLDS_TYPE[$n]="INTEGER"
@@ -168,10 +169,13 @@ do
 	fi
 done
 S="${S} FROM ${QVIEW_MASTER_NAME}"
+QAPPEND_MASTER_SQL_APPEND=$S
 
-echo $S
-S="${S}Record_Date, Record_Tag, Record_Mark_Deleted, Record_Mark_Invalid, Record_Remark, Feed_ID )
-SELECT Master.Record_Date, Master.Record_Tag, Master.Record_Mark_Deleted, Master.Record_Mark_Invalid, Master.Record_Remark, Master.Feed_ID
-FROM Master;"
+echo $QAPPEND_MASTER_SQL_APPEND
 
-#echo $QAPPEND_MASTER_SQL_APPEND
+
+cat <<EOF > test.vba
+
+
+EOF
+
