@@ -25,7 +25,8 @@ declare -a FLDS_PK
 declare -a FLDS_GRP_CORE
 
 # Setting querys
-declare -a QRYS
+declare -a QRYS_NAME
+declare -a QRYS_SQL
 
 n=0
 FLDS_NAME[$n]=${FLD_RECORD_ID}
@@ -90,7 +91,8 @@ QVIEW_RECORDS_VALID_SQL_SELECT="SELECT Records.*\
 	FROM Records\
 	WHERE (((Records.${FLD_RECORD_MARK_INVALID})=No));\
 "
-n=$((n+1))
+#n=$((n+1))
+n=0
 QRYS_NAME[$n]=${QVIEW_RECORDS_VALID_NAME}
 QRYS_SQL[$n]=${QVIEW_RECORDS_VALID_SQL_SELECT}
 
@@ -128,6 +130,9 @@ do
 done
 S="${S}));"
 QVIEW_RECORDS_ACTIVE_SQL_SELECT="$S"
+n=$((n+1))
+QRYS_NAME[$n]=${QVIEW_RECORDS_ACTIVE_NAME}
+QRYS_SQL[$n]=${QVIEW_RECORDS_ACTIVE_SQL_SELECT}
 
 
 # Composing sql
@@ -143,6 +148,10 @@ QVIEW_SNAPSHOT_ACTIVE_SQL_SELECT="SELECT\
 	${QVIEW_RECORDS_ACTIVE_NAME}.${FLD_RECORD_MARK_DELETED},\
 	${QVIEW_RECORDS_ACTIVE_NAME}.${FLD_RECORD_MARK_INVALID};\
 "
+n=$((n+1))
+QRYS_NAME[$n]=${QVIEW_SNAPSHOT_ACTIVE_NAME}
+QRYS_SQL[$n]=${QVIEW_SNAPSHOT_ACTIVE_SQL_SELECT}
+
 QVIEW_MASTER_NAME="${TBL_THEME}Master"
 QVIEW_MASTER_SQL_SELECT="SELECT\
 	${QVIEW_RECORDS_ACTIVE_NAME}.*\
@@ -151,6 +160,9 @@ QVIEW_MASTER_SQL_SELECT="SELECT\
  ON\
  	${QVIEW_RECORDS_ACTIVE_NAME}.${FLD_RECORD_DATE} = ${QVW_SNAPSHOT_ACTIVE_NAME}.${SQL_ALIAS_RECORD_DATE_OF_MAX}\
 "
+n=$((n+1))
+QRYS_NAME[$n]=${QVIEW_MASTER_NAME}
+QRYS_SQL[$n]=${QVIEW_MASTER_SQL_SELECT}
 
 LINKED_TBL_MASTER_NAME="${TBL_THEME}Master"
 
@@ -160,7 +172,14 @@ LINKED_TBL_MASTER_NAME="${TBL_THEME}Master"
 echo $QVIEW_RECORDS_ACTIVE_SQL_SELECT
 
 # Composing sql for deleting records in master table
+QDELETE_MASTER_NAME="Delete${TBL_THEME}Master"
 QDELETE_MASTER_SQL_DELETE="DELETE $TABLE_NAME.* FROM $TABLE_NAME"
+n=$((n+1))
+QRYS_NAME[$n]=${QDELETE_MASTER_NAME}
+QRYS_SQL[$n]=${QDELETE_MASTER_SQL_DELETE}
+
+# Composing sql
+QAPPEND_MASTER_NAME="$Append${TBL_THEME}Master"
 S="INSERT INTO ${LINKED_TBL_MASTER_NAME} ("
 for i in "${!FLDS_NAME[@]}"
 do
@@ -182,30 +201,48 @@ do
 		fi
 	fi
 done
+
 S="${S} FROM ${QVIEW_MASTER_NAME}"
 QAPPEND_MASTER_SQL_APPEND=$S
+n=$((n+1))
+QRYS_NAME[$n]=${QAPPEND_MASTER_NAME}
+QRYS_SQL[$n]=${QAPPEND_MASTER_SQL_APPEND}
 
 echo $QAPPEND_MASTER_SQL_APPEND
 
 
-cat <<EOF > test.vba
-
+OUTPUT_FILE=query.vba
+cat <<EOF > $OUTPUT_FILE
     Dim db As Database
     Set db = CurrentDb
     On Error Resume Next
+EOF
 
-    db.QueryDefs.Delete "QVIEW_TEST0"
+for i in "${!QRYS_NAME[@]}"
+do
+cat <<EOF >> $OUTPUT_FILE
+    db.QueryDefs.Delete "${QRYS_NAME[$i]}"
+EOF
+done
+
+cat <<EOF >> $OUTPUT_FILE
     On Error GoTo 0
-    db.CreateQueryDef "QVIEW_TEST0", "select * from Master"
+EOF
+
+for i in "${!QRYS_NAME[@]}"
+do
+cat <<EOF >> $OUTPUT_FILE
+    db.CreateQueryDef "${QRYS_NAME[$i]}", "${QRYS_SQL[$i]}"
+EOF
+done
     
-    
+cat <<EOF >> $OUTPUT_FILE
     db.Close
     Set db = Nothing
-
 EOF
 
 TEST="this is a quick test"
-VAR_NAME="test"
+VAR_NAME="TEST"
 echo $VAR_NAME
-echo "${$VAR_NAME}"
+echo "${!VAR_NAME}"
 
